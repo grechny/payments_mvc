@@ -14,3 +14,4 @@ Payments System (1'st module project)
 11.	Конфигурационную информацию хранить в properties-файле, например, такую как: параметры соединения с БД, граничные значения предметной области и сервера приложений (рекомендуется Tomcat).
 12. Пофиксать properties файлы, т.к. не видит зависимости и выдает warnings.
 13.	javadoc
+14. Изучить ThreadLocal http://articles.javatalks.ru/articles/17
