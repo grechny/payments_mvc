@@ -1,5 +1,6 @@
 package by.pvt.khudnitsky.payments.services;
 
+import by.pvt.khudnitsky.payments.dao.implementations.AccountDao;
 import by.pvt.khudnitsky.payments.dao.implementations.OperationDao;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
@@ -23,7 +24,9 @@ public enum OperationService implements Service <Operation> {
      */
     @Override
     public void add(Operation entity) throws SQLException {
-
+        connection = ConnectionPool.INSTANCE.getConnection();
+        OperationDao.INSTANCE.add(connection, entity);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
     }
 
     /**
