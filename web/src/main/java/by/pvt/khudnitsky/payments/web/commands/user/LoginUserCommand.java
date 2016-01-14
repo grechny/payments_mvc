@@ -15,7 +15,6 @@ import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
 import by.pvt.khudnitsky.payments.services.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.services.constants.Parameters;
-import by.pvt.khudnitsky.payments.dao.implementations.UserDao;
 import by.pvt.khudnitsky.payments.services.utils.logger.PaymentSystemLogger;
 import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
