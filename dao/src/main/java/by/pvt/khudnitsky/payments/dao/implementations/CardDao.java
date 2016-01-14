@@ -39,7 +39,7 @@ public enum CardDao implements AbstractDao<Card> {
     }
 
 	    @Override
-    public void create(Connection connection, Card entity) throws SQLException {
+    public void add(Connection connection, Card entity) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
@@ -49,7 +49,7 @@ public enum CardDao implements AbstractDao<Card> {
     }
 
     @Override
-    public void deleteById(Connection connection, int id) throws SQLException {
+    public void delete(Connection connection, int id) throws SQLException {
         throw new UnsupportedOperationException();
     }
 }

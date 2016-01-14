@@ -82,7 +82,7 @@ public class BlockCommand extends AbstractCommand {
         operation.setUserId(user.getId());
         operation.setAccountId(user.getAccountId());
         operation.setDescription(description);
-        OperationDao.INSTANCE.create(connection, operation);
+        OperationDao.INSTANCE.add(connection, operation);
         AccountDao.INSTANCE.updateAccountStatus(connection, aid, AccountStatuses.BLOCKED);
     }
 }

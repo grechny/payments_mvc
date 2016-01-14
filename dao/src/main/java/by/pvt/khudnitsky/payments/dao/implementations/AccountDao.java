@@ -24,7 +24,7 @@ public enum AccountDao implements AbstractDao<Account> {
     INSTANCE;
 
     @Override
-    public void create(Connection connection, Account account) throws SQLException {
+    public void add(Connection connection, Account account) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(SqlRequests.ADD_ACCOUNT_WITH_ID);
         statement.setInt(1, account.getId());
         statement.setDouble(2, account.getAmount());
@@ -117,7 +117,7 @@ public enum AccountDao implements AbstractDao<Account> {
     }
 
     @Override
-    public void deleteById(Connection connection, int id)throws SQLException{
+    public void delete(Connection connection, int id)throws SQLException{
         PreparedStatement statement = connection.prepareStatement(SqlRequests.DELETE_ACCOUNT_BY_ID);
         statement.setInt(1, id);
         statement.executeUpdate();

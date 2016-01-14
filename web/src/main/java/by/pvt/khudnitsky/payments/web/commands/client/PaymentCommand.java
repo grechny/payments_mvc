@@ -103,7 +103,7 @@ public class PaymentCommand extends AbstractCommand{
         operation.setAccountId(user.getAccountId());
         operation.setAmount(payment);
         operation.setDescription(description);
-        OperationDao.INSTANCE.create(connection, operation);
+        OperationDao.INSTANCE.add(connection, operation);
         AccountDao.INSTANCE.updateAmount(connection, (-1) * payment, user.getAccountId());
     }
 }

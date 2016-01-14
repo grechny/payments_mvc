@@ -97,7 +97,7 @@ public enum UserDao implements AbstractDao<User> {
     }
 
     @Override
-    public void create(Connection connection, User user) throws SQLException{
+    public void add(Connection connection, User user) throws SQLException{
         PreparedStatement statement = connection.prepareStatement(SqlRequests.ADD_USER);
         statement.setString(1, user.getFirstName());
         statement.setString(2, user.getLastName());
@@ -113,7 +113,7 @@ public enum UserDao implements AbstractDao<User> {
     }
 
     @Override
-    public void deleteById(Connection connection, int id) throws SQLException {
+    public void delete(Connection connection, int id) throws SQLException {
         throw new UnsupportedOperationException();
     }
 }

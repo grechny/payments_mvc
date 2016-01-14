@@ -61,17 +61,17 @@ public class AccountDaoTest {
     @Test
     public void testCreate() throws Exception{
         Account expected = createAccountForTest(100, "TEST", 100, 0);
-        AccountDao.INSTANCE.create(connection, expected);
+        AccountDao.INSTANCE.add(connection, expected);
         Account actual = AccountDao.INSTANCE.getById(connection, expected.getId());
         Assert.assertEquals(expected, actual);
-        AccountDao.INSTANCE.deleteById(connection, expected.getId());
+        AccountDao.INSTANCE.delete(connection, expected.getId());
     }
 
     @Test
     public void testDeleteById() throws Exception{
         Account account = createAccountForTest(100, "TEST", 100, 0);
-        AccountDao.INSTANCE.create(connection, account);
-        AccountDao.INSTANCE.deleteById(connection, account.getId());
+        AccountDao.INSTANCE.add(connection, account);
+        AccountDao.INSTANCE.delete(connection, account.getId());
         Account actual = AccountDao.INSTANCE.getById(connection, account.getId());
         Assert.assertNull(actual);
     }
@@ -79,12 +79,12 @@ public class AccountDaoTest {
     @Test
     public void testUpdateAmount() throws Exception {
         Account expected = createAccountForTest(100, "TEST", 100, 0);
-        AccountDao.INSTANCE.create(connection, expected);
+        AccountDao.INSTANCE.add(connection, expected);
         double adding = 100;
         expected.setAmount(expected.getAmount() + adding);
         AccountDao.INSTANCE.updateAmount(connection, adding, expected.getId());
         Account actual = AccountDao.INSTANCE.getById(connection, expected.getId());
         Assert.assertEquals(expected, actual);
-        AccountDao.INSTANCE.deleteById(connection, expected.getId());
+        AccountDao.INSTANCE.delete(connection, expected.getId());
     }
 }

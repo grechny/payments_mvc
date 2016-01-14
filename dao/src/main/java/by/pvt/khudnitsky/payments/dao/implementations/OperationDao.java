@@ -42,7 +42,7 @@ public enum OperationDao implements AbstractDao<Operation> {
     }
 
     @Override
-    public void create(Connection connection, Operation entity) throws SQLException {
+    public void add(Connection connection, Operation entity) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(SqlRequests.CREATE_OPERATION);
         statement.setInt(1, entity.getUserId());
         statement.setInt(2, entity.getAccountId());
@@ -57,7 +57,7 @@ public enum OperationDao implements AbstractDao<Operation> {
     }
 
     @Override
-    public void deleteById(Connection connection, int id) throws SQLException {
+    public void delete(Connection connection, int id) throws SQLException {
         throw new UnsupportedOperationException();
     }
 }

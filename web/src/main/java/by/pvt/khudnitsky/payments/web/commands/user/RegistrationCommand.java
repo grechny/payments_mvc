@@ -99,8 +99,8 @@ public class RegistrationCommand extends AbstractCommand {
         user.setAccountId(accountId);
         user.setLogin(login);
         user.setPassword(password);
-        AccountDao.INSTANCE.create(connection, account);
-        UserDao.INSTANCE.create(connection, user);
+        AccountDao.INSTANCE.add(connection, account);
+        UserDao.INSTANCE.add(connection, user);
     }
 
     private boolean areFieldsFullStocked(){

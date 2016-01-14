@@ -16,9 +16,9 @@ import java.util.List;
  *
  */
 public interface AbstractDao  <T extends Entity> {
-    void create(Connection connection, T entity) throws SQLException;
+    void add(Connection connection, T entity) throws SQLException;
     List<T> getAll(Connection connection) throws SQLException;
     T getById(Connection connection, int id) throws SQLException;
     //void update(Connection connection, T entity) throws SQLException;
-    void deleteById(Connection connection, int id) throws SQLException;
+    void delete(Connection connection, int id) throws SQLException;
 }

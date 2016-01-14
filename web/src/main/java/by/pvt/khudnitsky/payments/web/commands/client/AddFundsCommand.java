@@ -94,7 +94,7 @@ public class AddFundsCommand extends AbstractCommand{
         operation.setAccountId(user.getAccountId());
         operation.setAmount(addFunds);
         operation.setDescription(description);
-        OperationDao.INSTANCE.create(connection, operation);
+        OperationDao.INSTANCE.add(connection, operation);
         AccountDao.INSTANCE.updateAmount(connection, addFunds, user.getAccountId());
     }
 }
