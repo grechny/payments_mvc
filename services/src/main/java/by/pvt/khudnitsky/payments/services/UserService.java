@@ -1,7 +1,15 @@
 package by.pvt.khudnitsky.payments.services;
 
+import by.pvt.khudnitsky.payments.dao.constants.AccessLevels;
+import by.pvt.khudnitsky.payments.dao.constants.SqlRequests;
+import by.pvt.khudnitsky.payments.dao.constants.UserType;
+import by.pvt.khudnitsky.payments.dao.implementations.UserDao;
 import by.pvt.khudnitsky.payments.entities.User;
+import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -10,6 +18,7 @@ import java.util.List;
  */
 public enum UserService implements Service <User> {
     INSTANCE;
+    private Connection connection;
 
     /**
      * Calls Dao add() method
@@ -65,5 +74,30 @@ public enum UserService implements Service <User> {
     @Override
     public void delete(int id) throws SQLException {
 
+    }
+
+    public boolean checkUserAuthorization(String login, String password) throws SQLException{
+        connection = ConnectionPool.INSTANCE.getConnection();
+        boolean isAuthorized = UserDao.INSTANCE.isAuthorized(connection, login, password);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
+        return isAuthorized;
+    }
+
+    public User getUserByLogin(String login) throws SQLException{
+        connection = ConnectionPool.INSTANCE.getConnection();
+        User user = UserDao.INSTANCE.getByLogin(connection, login);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
+        return user;
+    }
+
+    public UserType checkAccessLevel(User user) throws SQLException{
+        UserType userType = null;
+        if(AccessLevels.CLIENT == user.getAccessLevel()){
+            userType = UserType.CLIENT;
+        }
+        else{
+            userType = UserType.ADMINISTRATOR;
+        }
+        return userType;
     }
 }

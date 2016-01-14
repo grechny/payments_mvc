@@ -3,7 +3,6 @@
  */
 package by.pvt.khudnitsky.payments.web.commands.user;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import by.pvt.khudnitsky.payments.dao.constants.UserType;
 import by.pvt.khudnitsky.payments.entities.User;
+import by.pvt.khudnitsky.payments.services.UserService;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
-import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
 import by.pvt.khudnitsky.payments.services.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.services.constants.Parameters;
@@ -34,15 +33,12 @@ public class LoginUserCommand extends AbstractCommand {
         String password = request.getParameter(Parameters.PASSWORD);
         HttpSession session = request.getSession();
         String page = null;
-        Connection connection = null;
         try {
-            connection = ConnectionPool.INSTANCE.getConnection();
-            if(UserDao.INSTANCE.isAuthorized(connection, login, password)){
-
-                User user = UserDao.INSTANCE.getUserByLogin(connection, login);
-                UserType userType = UserDao.INSTANCE.checkAccessLevel(connection, login);
-                session.setAttribute(Parameters.USERTYPE, userType);
+            if(UserService.INSTANCE.checkUserAuthorization(login, password)){
+                User user = UserService.INSTANCE.getUserByLogin(login);
+                UserType userType = UserService.INSTANCE.checkAccessLevel(user);
                 session.setAttribute(Parameters.USER, user);
+                session.setAttribute(Parameters.USERTYPE, userType);
                 if(UserType.CLIENT.equals(userType)){
                     page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.CLIENT_PAGE_PATH);
                 }
@@ -59,11 +55,6 @@ public class LoginUserCommand extends AbstractCommand {
             PaymentSystemLogger.INSTANCE.logError(getClass(), e.getMessage());
             page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ERROR_PAGE_PATH);
             request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.INSTANCE.getProperty(MessageConstants.ERROR_DATABASE));
-        }
-        finally {
-            if (connection != null){
-                ConnectionPool.INSTANCE.releaseConnection(connection);
-            }
         }
         return page;
     }

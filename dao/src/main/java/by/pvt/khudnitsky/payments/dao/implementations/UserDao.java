@@ -39,7 +39,7 @@ public enum UserDao implements AbstractDao<User> {
         return list;
     }
 
-    public User getUserByLogin(Connection connection, String login) throws SQLException{
+    public User getByLogin(Connection connection, String login) throws SQLException{
         User user = null;
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_USER_BY_LOGIN);
         statement.setString(1, login);
@@ -78,22 +78,6 @@ public enum UserDao implements AbstractDao<User> {
             isLogIn = true;
         }
         return isLogIn;
-    }
-
-    public UserType checkAccessLevel(Connection connection, String login) throws SQLException{
-        UserType userType = null;
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.CHECK_ACCESS_LEVEL);
-        statement.setString(1, login);
-        ResultSet result = statement.executeQuery();
-        while(result.next()){
-            if(AccessLevels.CLIENT == result.getInt("access_level")){
-                userType = UserType.CLIENT;
-            }
-            else{
-                userType = UserType.ADMINISTRATOR;
-            }
-        }
-        return userType;
     }
 
     @Override
