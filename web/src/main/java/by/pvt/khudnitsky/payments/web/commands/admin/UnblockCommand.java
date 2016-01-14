@@ -3,7 +3,6 @@
  */
 package by.pvt.khudnitsky.payments.web.commands.admin;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -12,13 +11,12 @@ import javax.servlet.http.HttpSession;
 
 import by.pvt.khudnitsky.payments.dao.constants.UserType;
 import by.pvt.khudnitsky.payments.entities.Account;
+import by.pvt.khudnitsky.payments.services.AccountService;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
-import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
-import by.pvt.khudnitsky.payments.services.constants.AccountStatuses;
+import by.pvt.khudnitsky.payments.services.constants.AccountStatus;
 import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
 import by.pvt.khudnitsky.payments.services.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.services.constants.Parameters;
-import by.pvt.khudnitsky.payments.dao.implementations.AccountDao;
 import by.pvt.khudnitsky.payments.services.utils.logger.PaymentSystemLogger;
 import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
@@ -30,10 +28,6 @@ import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
  */
 public class UnblockCommand extends AbstractCommand {
 
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
-     */
-    @SuppressWarnings("rawtypes")
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
@@ -42,11 +36,9 @@ public class UnblockCommand extends AbstractCommand {
         if(userType == UserType.ADMINISTRATOR){
             if(request.getParameter(Parameters.UNBLOCK) != null){
                 int aid = Integer.valueOf(request.getParameter(Parameters.UNBLOCK));
-                Connection connection = null;
                 try {
-                    connection = ConnectionPool.INSTANCE.getConnection();
-                    AccountDao.INSTANCE.updateAccountStatus(connection, aid, AccountStatuses.UNBLOCKED);
-                    List<Account> list = AccountDao.INSTANCE.getBlockedAccounts(connection);
+                    AccountService.INSTANCE.updateAccountStatus(aid, AccountStatus.UNBLOCKED);
+                    List<Account> list = AccountService.INSTANCE.getBlockedAccounts();
                     session.setAttribute(Parameters.ACCOUNTS_LIST, list);
                     page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ADMIN_UNBLOCK_PAGE);
                 }
@@ -54,11 +46,6 @@ public class UnblockCommand extends AbstractCommand {
                     PaymentSystemLogger.INSTANCE.logError(getClass(), e.getMessage());
                     page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ERROR_PAGE_PATH);
                     request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.INSTANCE.getProperty(MessageConstants.ERROR_DATABASE));
-                }
-                finally {
-                    if (connection != null){
-                        ConnectionPool.INSTANCE.releaseConnection(connection);
-                    }
                 }
             }
             else if(!((List)session.getAttribute(Parameters.ACCOUNTS_LIST)).isEmpty()){

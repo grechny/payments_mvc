@@ -20,6 +20,7 @@ public enum AccountService implements Service <Account>{
     INSTANCE;
 
     private Connection connection;
+
     /**
      * Calls AccountDao add() method
      *
@@ -83,5 +84,12 @@ public enum AccountService implements Service <Account>{
         List<Account> accounts= AccountDao.INSTANCE.getBlockedAccounts(connection);
         ConnectionPool.INSTANCE.releaseConnection(connection);
         return accounts;
+    }
+
+    // TODO Объединить в транзакцию
+    public void updateAccountStatus(int id, int status) throws SQLException{
+        connection = ConnectionPool.INSTANCE.getConnection();
+        AccountDao.INSTANCE.updateAccountStatus(connection, id, status);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
     }
 }

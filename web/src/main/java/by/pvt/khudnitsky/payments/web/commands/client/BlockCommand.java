@@ -15,7 +15,7 @@ import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.web.commands.factory.CommandType;
 import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
-import by.pvt.khudnitsky.payments.services.constants.AccountStatuses;
+import by.pvt.khudnitsky.payments.services.constants.AccountStatus;
 import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
 import by.pvt.khudnitsky.payments.services.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.services.constants.Parameters;
@@ -83,6 +83,6 @@ public class BlockCommand extends AbstractCommand {
         operation.setAccountId(user.getAccountId());
         operation.setDescription(description);
         OperationDao.INSTANCE.add(connection, operation);
-        AccountDao.INSTANCE.updateAccountStatus(connection, aid, AccountStatuses.BLOCKED);
+        AccountDao.INSTANCE.updateAccountStatus(connection, aid, AccountStatus.BLOCKED);
     }
 }
