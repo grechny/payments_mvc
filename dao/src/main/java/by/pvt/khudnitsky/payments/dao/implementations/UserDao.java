@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.pvt.khudnitsky.payments.dao.constants.UserType;
-import by.pvt.khudnitsky.payments.dao.interfaces.AbstractDao;
+import by.pvt.khudnitsky.payments.dao.AbstractDao;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.dao.constants.AccessLevels;
 import by.pvt.khudnitsky.payments.dao.constants.ColumnNames;

@@ -3,7 +3,7 @@
  */
 package by.pvt.khudnitsky.payments.dao.implementations;
 
-import by.pvt.khudnitsky.payments.dao.interfaces.AbstractDao;
+import by.pvt.khudnitsky.payments.dao.AbstractDao;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.dao.constants.ColumnNames;
 import by.pvt.khudnitsky.payments.dao.constants.SqlRequests;

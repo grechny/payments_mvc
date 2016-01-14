@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import by.pvt.khudnitsky.payments.dao.interfaces.AbstractDao;
+import by.pvt.khudnitsky.payments.dao.AbstractDao;
 import by.pvt.khudnitsky.payments.entities.Card;
 import by.pvt.khudnitsky.payments.dao.constants.ColumnNames;
 import by.pvt.khudnitsky.payments.dao.constants.SqlRequests;
