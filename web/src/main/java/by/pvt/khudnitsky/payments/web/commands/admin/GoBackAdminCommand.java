@@ -19,9 +19,6 @@ import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
  */
 public class GoBackAdminCommand extends AbstractCommand {
 
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
-     */
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
