@@ -10,19 +10,21 @@ import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
 import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
 
 /**
+ *
  * @author khudnitsky
  * @version 1.0
  *
  */
 public class GoBackCommand extends AbstractCommand {
 
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
+    /**
+     *
+     * @param request - http request
+     * @return index.jsp page
      */
     @Override
     public String execute(HttpServletRequest request) {
         String page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.INDEX_PAGE_PATH);
         return page;
     }
-
 }

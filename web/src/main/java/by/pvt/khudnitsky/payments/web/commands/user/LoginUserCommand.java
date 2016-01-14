@@ -28,19 +28,17 @@ import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
  */
 public class LoginUserCommand extends AbstractCommand {
 
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
-     */
     @Override
     public String execute(HttpServletRequest request) {
         String login = request.getParameter(Parameters.LOGIN);
         String password = request.getParameter(Parameters.PASSWORD);
+        HttpSession session = request.getSession();
         String page = null;
         Connection connection = null;
         try {
             connection = ConnectionPool.INSTANCE.getConnection();
             if(UserDao.INSTANCE.isAuthorized(connection, login, password)){
-                HttpSession session = request.getSession();
+
                 User user = UserDao.INSTANCE.getUserByLogin(connection, login);
                 UserType userType = UserDao.INSTANCE.checkAccessLevel(connection, login);
                 session.setAttribute(Parameters.USERTYPE, userType);

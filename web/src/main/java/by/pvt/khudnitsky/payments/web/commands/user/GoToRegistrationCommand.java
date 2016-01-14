@@ -16,13 +16,9 @@ import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
  */
 public class GoToRegistrationCommand extends AbstractCommand {
 
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
-     */
     @Override
     public String execute(HttpServletRequest request) {
         String page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.REGISTRATION_PAGE_PATH);
         return page;
     }
-
 }
