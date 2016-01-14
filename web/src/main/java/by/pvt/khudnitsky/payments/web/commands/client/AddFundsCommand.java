@@ -27,8 +27,6 @@ import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
  *
  */
 public class AddFundsCommand extends AbstractCommand{
-    private static User user;
-    private static double addFunds;
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -36,11 +34,11 @@ public class AddFundsCommand extends AbstractCommand{
         HttpSession session = request.getSession();
         UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
         if(userType == UserType.CLIENT) {
-            user = (User) session.getAttribute(Parameters.USER);
+            User user = (User) session.getAttribute(Parameters.USER);
             int aid = user.getAccountId();
             try {
                 if (!AccountService.INSTANCE.checkAccountStatus(aid)) {
-                    addFunds = Double.valueOf(request.getParameter(Parameters.ADD_FUNDS));
+                    double addFunds = Double.valueOf(request.getParameter(Parameters.ADD_FUNDS));
                     if (addFunds > 0) {
                         String commandName = request.getParameter(Parameters.COMMAND);
                         CommandType type = CommandType.valueOf(commandName.toUpperCase());

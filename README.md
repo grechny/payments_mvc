@@ -16,3 +16,4 @@ Payments System (1'st module project)
 13.	javadoc
 14. Изучить ThreadLocal http://articles.javatalks.ru/articles/17
 15. Валидация?
+16. Локальные переменные перенести как переменные класса
