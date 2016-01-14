@@ -15,3 +15,4 @@ Payments System (1'st module project)
 12. Пофиксать properties файлы, т.к. не видит зависимости и выдает warnings.
 13.	javadoc
 14. Изучить ThreadLocal http://articles.javatalks.ru/articles/17
+15. Валидация?
