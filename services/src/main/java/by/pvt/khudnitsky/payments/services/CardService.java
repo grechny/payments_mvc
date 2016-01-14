@@ -19,7 +19,7 @@ public enum CardService implements Service <Card>{
      */
     @Override
     public void add(Card entity) throws SQLException {
-
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -30,7 +30,7 @@ public enum CardService implements Service <Card>{
      */
     @Override
     public List<Card> getAll() throws SQLException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -42,7 +42,7 @@ public enum CardService implements Service <Card>{
      */
     @Override
     public Card getById(int id) throws SQLException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -53,7 +53,7 @@ public enum CardService implements Service <Card>{
      */
     @Override
     public void update(Card entity) throws SQLException {
-
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -64,6 +64,6 @@ public enum CardService implements Service <Card>{
      */
     @Override
     public void delete(int id) throws SQLException {
-
+        throw new UnsupportedOperationException();
     }
 }
