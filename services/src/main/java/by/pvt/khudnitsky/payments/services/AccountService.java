@@ -6,8 +6,10 @@ import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.services.constants.AccountStatus;
+import by.pvt.khudnitsky.payments.services.constants.Parameters;
 import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -126,5 +128,15 @@ public enum AccountService implements Service <Account>{
         OperationService.INSTANCE.add(operation);
         updateAccountStatus(user.getId(), AccountStatus.BLOCKED);
         ConnectionPool.INSTANCE.releaseConnection(connection);
+    }
+
+    public void payment(User user, String description, double amount) throws SQLException{
+        Operation operation = new Operation();
+        operation.setUserId(user.getId());
+        operation.setAccountId(user.getAccountId());
+        operation.setAmount(amount);
+        operation.setDescription(description);
+        OperationService.INSTANCE.add(operation);
+        AccountDao.INSTANCE.updateAmount(connection, (-1) * amount, user.getAccountId());
     }
 }

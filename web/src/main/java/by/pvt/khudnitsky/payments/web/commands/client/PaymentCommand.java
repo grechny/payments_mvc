@@ -3,7 +3,6 @@
  */
 package by.pvt.khudnitsky.payments.web.commands.client;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,16 +10,13 @@ import javax.servlet.http.HttpSession;
 
 import by.pvt.khudnitsky.payments.dao.constants.UserType;
 import by.pvt.khudnitsky.payments.entities.Account;
-import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.entities.User;
+import by.pvt.khudnitsky.payments.services.AccountService;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.web.commands.factory.CommandType;
-import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
 import by.pvt.khudnitsky.payments.services.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.services.constants.Parameters;
-import by.pvt.khudnitsky.payments.dao.implementations.AccountDao;
-import by.pvt.khudnitsky.payments.dao.implementations.OperationDao;
 import by.pvt.khudnitsky.payments.services.utils.logger.PaymentSystemLogger;
 import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
@@ -34,9 +30,6 @@ public class PaymentCommand extends AbstractCommand{
     private static User user;
     private static double payment;
 
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
-     */
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
@@ -45,15 +38,16 @@ public class PaymentCommand extends AbstractCommand{
         if(userType == UserType.CLIENT){
             user = (User)session.getAttribute(Parameters.USER);
             int aid = user.getAccountId();
-            Connection connection = null;
             try {
-                connection = ConnectionPool.INSTANCE.getConnection();
-                if(!AccountDao.INSTANCE.isAccountStatusBlocked(connection, aid)){
+                if(!AccountService.INSTANCE.checkAccountStatus(aid)){
                     payment = Double.valueOf(request.getParameter(Parameters.PAYMENT));
                     if(payment > 0){
-                        Account account = AccountDao.INSTANCE.getById(connection, aid);
+                        Account account = AccountService.INSTANCE.getById(aid);
                         if(account.getAmount() >= payment){
-                            makeOperation(connection, request);
+                            String commandName = request.getParameter(Parameters.COMMAND);
+                            CommandType type = CommandType.valueOf(commandName.toUpperCase());
+                            String description = type.getValue();
+                            AccountService.INSTANCE.payment(user, description, payment);
                             request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.INSTANCE.getProperty(MessageConstants.SUCCESS_OPERATION));
                             page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.CLIENT_PAYMENT_PAGE_PATH);
                         }
@@ -81,29 +75,11 @@ public class PaymentCommand extends AbstractCommand{
                 request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.INSTANCE.getProperty(MessageConstants.INVALID_NUMBER_FORMAT));
                 page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.CLIENT_PAYMENT_PAGE_PATH);
             }
-            finally {
-                if (connection != null){
-                    ConnectionPool.INSTANCE.releaseConnection(connection);
-                }
-            }
         }
         else{
             page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.INDEX_PAGE_PATH);
             session.invalidate();
         }
         return page;
-    }
-
-    private void makeOperation(Connection connection, HttpServletRequest request) throws SQLException{
-        String commandName = request.getParameter(Parameters.COMMAND);
-        CommandType type = CommandType.valueOf(commandName.toUpperCase());
-        String description = type.getValue();
-        Operation operation = new Operation();
-        operation.setUserId(user.getId());
-        operation.setAccountId(user.getAccountId());
-        operation.setAmount(payment);
-        operation.setDescription(description);
-        OperationDao.INSTANCE.add(connection, operation);
-        AccountDao.INSTANCE.updateAmount(connection, (-1) * payment, user.getAccountId());
     }
 }
