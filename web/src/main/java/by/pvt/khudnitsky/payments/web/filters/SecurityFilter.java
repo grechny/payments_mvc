@@ -5,7 +5,7 @@ package by.pvt.khudnitsky.payments.web.filters;
 
 import by.pvt.khudnitsky.payments.dao.constants.UserType;
 import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
-import by.pvt.khudnitsky.payments.services.managers.ConfigurationManager;
+import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
 
 import java.io.IOException;
 import javax.servlet.Filter;

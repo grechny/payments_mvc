@@ -8,7 +8,7 @@
 
   <servlet>
     <servlet-name>Controller</servlet-name>
-    <servlet-class>by.pvt.khudnitsky.payments.web.controller.Controller</servlet-class>
+    <servlet-class>by.pvt.khudnitsky.payments.web.controllers.Controller</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Controller</servlet-name>
