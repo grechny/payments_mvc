@@ -12,12 +12,11 @@ import javax.servlet.http.HttpSession;
 
 import by.pvt.khudnitsky.payments.dao.constants.UserType;
 import by.pvt.khudnitsky.payments.entities.Operation;
+import by.pvt.khudnitsky.payments.services.OperationService;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
-import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
 import by.pvt.khudnitsky.payments.services.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.services.constants.Parameters;
-import by.pvt.khudnitsky.payments.dao.implementations.OperationDao;
 import by.pvt.khudnitsky.payments.services.utils.logger.PaymentSystemLogger;
 import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
@@ -29,19 +28,14 @@ import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
  */
 public class ShowOperationsCommand extends AbstractCommand{
 
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
-     */
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
         HttpSession session = request.getSession();
         UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
         if(userType == UserType.ADMINISTRATOR){
-            Connection connection = null;
             try{
-                connection = ConnectionPool.INSTANCE.getConnection();
-                List<Operation> list = OperationDao.INSTANCE.getAll(connection);
+                List<Operation> list = OperationService.INSTANCE.getAll();
                 session.setAttribute(Parameters.OPERATIONS_LIST, list);
                 page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ADMIN_SHOW_OPERATIONS_PAGE);
             }
@@ -49,11 +43,6 @@ public class ShowOperationsCommand extends AbstractCommand{
                 PaymentSystemLogger.INSTANCE.logError(getClass(), e.getMessage());
                 page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.INSTANCE.getProperty(MessageConstants.ERROR_DATABASE));
-            }
-            finally {
-                if (connection != null){
-                    ConnectionPool.INSTANCE.releaseConnection(connection);
-                }
             }
         }
         else{

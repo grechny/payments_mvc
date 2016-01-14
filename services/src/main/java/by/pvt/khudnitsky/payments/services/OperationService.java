@@ -1,7 +1,10 @@
 package by.pvt.khudnitsky.payments.services;
 
+import by.pvt.khudnitsky.payments.dao.implementations.OperationDao;
 import by.pvt.khudnitsky.payments.entities.Operation;
+import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import java.util.List;
 public enum OperationService implements Service <Operation> {
     INSTANCE;
 
+    private Connection connection;
     /**
      * Calls Dao add() method
      *
@@ -30,7 +34,10 @@ public enum OperationService implements Service <Operation> {
      */
     @Override
     public List<Operation> getAll() throws SQLException {
-        return null;
+        connection = ConnectionPool.INSTANCE.getConnection();
+        List<Operation> operations = OperationDao.INSTANCE.getAll(connection);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
+        return operations;
     }
 
     /**
