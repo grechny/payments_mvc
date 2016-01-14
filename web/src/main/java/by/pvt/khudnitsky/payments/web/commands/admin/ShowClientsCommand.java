@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import by.pvt.khudnitsky.payments.dao.constants.UserType;
 import by.pvt.khudnitsky.payments.entities.User;
+import by.pvt.khudnitsky.payments.services.UserService;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
@@ -29,19 +30,14 @@ import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
  */
 public class ShowClientsCommand extends AbstractCommand{
 
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
-     */
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
         HttpSession session = request.getSession();
         UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
         if(userType == UserType.ADMINISTRATOR){
-            Connection connection = null;
             try{
-                connection = ConnectionPool.INSTANCE.getConnection();
-                List<User> list = UserDao.INSTANCE.getAll(connection);
+                List<User> list = UserService.INSTANCE.getAll();
                 session.setAttribute(Parameters.USER_LIST, list);
                 page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ADMIN_SHOW_CLIENTS_PAGE);
             }
@@ -49,11 +45,6 @@ public class ShowClientsCommand extends AbstractCommand{
                 PaymentSystemLogger.INSTANCE.logError(getClass(), e.getMessage());
                 page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.INSTANCE.getProperty(MessageConstants.ERROR_DATABASE));
-            }
-            finally {
-                if (connection != null){
-                    ConnectionPool.INSTANCE.releaseConnection(connection);
-                }
             }
         }
         else{

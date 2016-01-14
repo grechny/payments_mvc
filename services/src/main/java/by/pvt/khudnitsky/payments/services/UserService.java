@@ -39,7 +39,10 @@ public enum UserService implements Service <User> {
      */
     @Override
     public List<User> getAll() throws SQLException {
-        return null;
+        connection = ConnectionPool.INSTANCE.getConnection();
+        List<User> users = UserDao.INSTANCE.getAll(connection);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
+        return users;
     }
 
     /**
