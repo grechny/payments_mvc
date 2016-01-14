@@ -24,12 +24,9 @@ public enum CommandFactory {
             CommandType type = CommandType.valueOf(commandName.toUpperCase());
             current = type.getCurrentCommand();
         }
-        catch(NullPointerException e){
+        catch(NullPointerException | IllegalArgumentException e){
             current = new LoginUserCommand();
             // TODO сделать простой if
-        }
-        catch(IllegalArgumentException e){
-            current = new LoginUserCommand();
         }
         return current;
     }
