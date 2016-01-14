@@ -26,6 +26,7 @@ public enum CommandFactory {
         }
         catch(NullPointerException e){
             current = new LoginUserCommand();
+            // TODO сделать простой if
         }
         catch(IllegalArgumentException e){
             current = new LoginUserCommand();
