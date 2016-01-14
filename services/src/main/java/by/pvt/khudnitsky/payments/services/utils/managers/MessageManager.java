@@ -17,9 +17,6 @@ public enum MessageManager implements Manager{
 
     private final ResourceBundle bundle = ResourceBundle.getBundle(ConfigsConstants.MESSAGES_SOURCE);
 
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.managers.Manager#getProperty(java.lang.String)
-     */
     @Override
     public String getProperty(String key) {
         return bundle.getString(key);
