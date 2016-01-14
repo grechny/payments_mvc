@@ -11,7 +11,8 @@ import java.util.List;
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-public class AccountService implements Service <Account>{
+public enum AccountService implements Service <Account>{
+    INSTANCE;
 
     /**
      * Calls AccountDao add() method

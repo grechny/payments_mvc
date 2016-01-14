@@ -8,7 +8,8 @@ import java.util.List;
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-public class UserService implements Service <User> {
+public enum UserService implements Service <User> {
+    INSTANCE;
 
     /**
      * Calls Dao add() method
