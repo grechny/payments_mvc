@@ -1,16 +1,14 @@
 package by.pvt.khudnitsky.payments.services;
 
-import by.pvt.khudnitsky.payments.dao.constants.ColumnNames;
-import by.pvt.khudnitsky.payments.dao.constants.SqlRequests;
 import by.pvt.khudnitsky.payments.dao.implementations.AccountDao;
+import by.pvt.khudnitsky.payments.dao.implementations.OperationDao;
 import by.pvt.khudnitsky.payments.entities.Account;
+import by.pvt.khudnitsky.payments.entities.Operation;
+import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,6 +88,26 @@ public enum AccountService implements Service <Account>{
     public void updateAccountStatus(int id, int status) throws SQLException{
         connection = ConnectionPool.INSTANCE.getConnection();
         AccountDao.INSTANCE.updateAccountStatus(connection, id, status);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
+    }
+
+    public boolean checkAccountStatus(int id) throws SQLException{
+        boolean isBlocked = false;
+        connection = ConnectionPool.INSTANCE.getConnection();
+        AccountDao.INSTANCE.isAccountStatusBlocked(connection, id);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
+        return isBlocked;
+    }
+
+    public void makeOperation(User user, String description, double amount) throws SQLException{
+        connection = ConnectionPool.INSTANCE.getConnection();
+        Operation operation = new Operation();
+        operation.setUserId(user.getId());
+        operation.setAccountId(user.getAccountId());
+        operation.setAmount(amount);
+        operation.setDescription(description);
+        OperationDao.INSTANCE.add(connection, operation);
+        AccountDao.INSTANCE.updateAmount(connection, amount, user.getAccountId());
         ConnectionPool.INSTANCE.releaseConnection(connection);
     }
 }
