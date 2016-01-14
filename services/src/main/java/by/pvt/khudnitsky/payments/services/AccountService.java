@@ -52,7 +52,10 @@ public enum AccountService implements Service <Account>{
      */
     @Override
     public Account getById(int id) throws SQLException {
-        return null;
+        connection = ConnectionPool.INSTANCE.getConnection();
+        Account account = AccountDao.INSTANCE.getById(connection, id);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
+        return account;
     }
 
     /**
@@ -99,14 +102,14 @@ public enum AccountService implements Service <Account>{
         return isBlocked;
     }
 
-    public void makeOperation(User user, String description, double amount) throws SQLException{
+    public void addFunds(User user, String description, double amount) throws SQLException{
         connection = ConnectionPool.INSTANCE.getConnection();
         Operation operation = new Operation();
         operation.setUserId(user.getId());
         operation.setAccountId(user.getAccountId());
         operation.setAmount(amount);
         operation.setDescription(description);
-        OperationDao.INSTANCE.add(connection, operation);
+        OperationService.INSTANCE.add(operation);
         AccountDao.INSTANCE.updateAmount(connection, amount, user.getAccountId());
         ConnectionPool.INSTANCE.releaseConnection(connection);
     }

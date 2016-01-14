@@ -3,7 +3,6 @@
  */
 package by.pvt.khudnitsky.payments.web.commands.client;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,12 +37,12 @@ public class AddFundsCommand extends AbstractCommand{
             int aid = user.getAccountId();
             try {
                 if (!AccountService.INSTANCE.checkAccountStatus(aid)) {
-                    double addFunds = Double.valueOf(request.getParameter(Parameters.ADD_FUNDS));
-                    if (addFunds > 0) {
+                    double amount = Double.valueOf(request.getParameter(Parameters.ADD_FUNDS));
+                    if (amount > 0) {
                         String commandName = request.getParameter(Parameters.COMMAND);
                         CommandType type = CommandType.valueOf(commandName.toUpperCase());
                         String description = type.getValue();
-                        AccountService.INSTANCE.makeOperation(user, description, addFunds);
+                        AccountService.INSTANCE.addFunds(user, description, amount);
                         request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.INSTANCE.getProperty(MessageConstants.SUCCESS_OPERATION));
                         page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.CLIENT_ADDFUNDS_PAGE_PATH);
                     } else {
