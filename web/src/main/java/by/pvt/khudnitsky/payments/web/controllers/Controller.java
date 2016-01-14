@@ -22,8 +22,6 @@ import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
  *
  */
 public class Controller extends HttpServlet{
-    private static final long serialVersionUID = 1L;
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         String page = null;
 
