@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import by.pvt.khudnitsky.payments.dao.constants.UserType;
 import by.pvt.khudnitsky.payments.entities.Account;
+import by.pvt.khudnitsky.payments.services.AccountService;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
@@ -29,19 +30,14 @@ import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
  */
 public class GoToUnblockCommand extends AbstractCommand {
 
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
-     */
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
         HttpSession session = request.getSession();
         UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
         if(userType == UserType.ADMINISTRATOR){
-            Connection connection = null;
             try {
-                connection = ConnectionPool.INSTANCE.getConnection();
-                List<Account> list = AccountDao.INSTANCE.getBlockedAccounts(connection);
+                List<Account> list = AccountService.INSTANCE.getBlockedAccounts();
                 session.setAttribute(Parameters.ACCOUNTS_LIST, list);
                 page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ADMIN_UNBLOCK_PAGE);
             }
@@ -50,11 +46,6 @@ public class GoToUnblockCommand extends AbstractCommand {
                 page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.INSTANCE.getProperty(MessageConstants.ERROR_DATABASE));
             }
-            finally {
-                if(connection != null) {
-                    ConnectionPool.INSTANCE.releaseConnection(connection);
-                }
-            }
         }
         else{
             page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.INDEX_PAGE_PATH);
@@ -62,5 +53,4 @@ public class GoToUnblockCommand extends AbstractCommand {
         }
         return page;
     }
-
 }

@@ -1,11 +1,16 @@
 package by.pvt.khudnitsky.payments.services;
 
+import by.pvt.khudnitsky.payments.dao.constants.ColumnNames;
+import by.pvt.khudnitsky.payments.dao.constants.SqlRequests;
 import by.pvt.khudnitsky.payments.dao.implementations.AccountDao;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +19,7 @@ import java.util.List;
 public enum AccountService implements Service <Account>{
     INSTANCE;
 
+    private Connection connection;
     /**
      * Calls AccountDao add() method
      *
@@ -70,5 +76,12 @@ public enum AccountService implements Service <Account>{
     @Override
     public void delete(int id) throws SQLException {
 
+    }
+
+    public List<Account> getBlockedAccounts() throws SQLException{
+        connection = ConnectionPool.INSTANCE.getConnection();
+        List<Account> accounts= AccountDao.INSTANCE.getBlockedAccounts(connection);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
+        return accounts;
     }
 }
