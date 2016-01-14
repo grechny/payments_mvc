@@ -45,7 +45,7 @@ public class UnblockCommand extends AbstractCommand {
                 Connection connection = null;
                 try {
                     connection = ConnectionPool.INSTANCE.getConnection();
-                    AccountDao.INSTANCE.updateAccountStatus(connection, aid, AccountStatuses.UNBLOCK);
+                    AccountDao.INSTANCE.updateAccountStatus(connection, aid, AccountStatuses.UNBLOCKED);
                     List<Account> list = AccountDao.INSTANCE.getBlockedAccounts(connection);
                     session.setAttribute(Parameters.ACCOUNTS_LIST, list);
                     page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ADMIN_UNBLOCK_PAGE);
