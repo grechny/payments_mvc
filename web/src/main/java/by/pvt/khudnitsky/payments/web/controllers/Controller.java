@@ -24,7 +24,6 @@ import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
 public class Controller extends HttpServlet{
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         CommandFactory commandFactory = CommandFactory.INSTANCE;
-
         Command command = commandFactory.defineCommand(request);
         String page = command.execute(request);
         if(page != null){
