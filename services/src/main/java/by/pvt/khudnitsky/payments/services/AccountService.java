@@ -5,6 +5,7 @@ import by.pvt.khudnitsky.payments.dao.implementations.OperationDao;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.entities.User;
+import by.pvt.khudnitsky.payments.services.constants.AccountStatus;
 import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 
 import java.sql.Connection;
@@ -111,6 +112,19 @@ public enum AccountService implements Service <Account>{
         operation.setDescription(description);
         OperationService.INSTANCE.add(operation);
         AccountDao.INSTANCE.updateAmount(connection, amount, user.getAccountId());
+        ConnectionPool.INSTANCE.releaseConnection(connection);
+    }
+
+
+    // TODO истправить создание двух connection
+    public void blockAccount(User user, String description) throws SQLException{
+        connection = ConnectionPool.INSTANCE.getConnection();
+        Operation operation = new Operation();
+        operation.setUserId(user.getId());
+        operation.setAccountId(user.getAccountId());
+        operation.setDescription(description);
+        OperationService.INSTANCE.add(operation);
+        updateAccountStatus(user.getId(), AccountStatus.BLOCKED);
         ConnectionPool.INSTANCE.releaseConnection(connection);
     }
 }

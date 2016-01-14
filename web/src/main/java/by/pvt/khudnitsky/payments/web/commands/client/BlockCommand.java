@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import by.pvt.khudnitsky.payments.dao.constants.UserType;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.entities.User;
+import by.pvt.khudnitsky.payments.services.AccountService;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.web.commands.factory.CommandType;
 import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
@@ -33,9 +34,7 @@ import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
 public class BlockCommand extends AbstractCommand {
     private static User user;
     private static String description;
-    /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
-     */
+
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
@@ -47,11 +46,9 @@ public class BlockCommand extends AbstractCommand {
             String commandName = request.getParameter(Parameters.COMMAND);
             CommandType type = CommandType.valueOf(commandName.toUpperCase());
             description = type.getValue();
-            Connection connection = null;
             try {
-                connection = ConnectionPool.INSTANCE.getConnection();
-                if(!AccountDao.INSTANCE.isAccountStatusBlocked(connection, aid)){
-                    blockAccount(connection, aid);
+                if(!AccountService.INSTANCE.checkAccountStatus(aid)){
+                    AccountService.INSTANCE.blockAccount(user, description);
                     request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.INSTANCE.getProperty(MessageConstants.SUCCESS_OPERATION));
                     page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.CLIENT_BLOCK_PAGE_PATH);
                 }
@@ -64,25 +61,11 @@ public class BlockCommand extends AbstractCommand {
                 page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.INSTANCE.getProperty(MessageConstants.ERROR_DATABASE));
             }
-            finally {
-                if (connection != null){
-                    ConnectionPool.INSTANCE.releaseConnection(connection);
-                }
-            }
         }
         else{
             page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.INDEX_PAGE_PATH);
             session.invalidate();
         }
         return page;
-    }
-
-    private void blockAccount(Connection connection, int aid) throws SQLException{
-        Operation operation = new Operation();
-        operation.setUserId(user.getId());
-        operation.setAccountId(user.getAccountId());
-        operation.setDescription(description);
-        OperationDao.INSTANCE.add(connection, operation);
-        AccountDao.INSTANCE.updateAccountStatus(connection, aid, AccountStatus.BLOCKED);
     }
 }
