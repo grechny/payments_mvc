@@ -1,7 +1,10 @@
 package by.pvt.khudnitsky.payments.services;
 
+import by.pvt.khudnitsky.payments.dao.implementations.AccountDao;
 import by.pvt.khudnitsky.payments.entities.Account;
+import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,7 +21,9 @@ public class AccountService implements Service <Account>{
      */
     @Override
     public void add(Account entity) throws SQLException {
-
+        Connection connection = ConnectionPool.INSTANCE.getConnection();
+        AccountDao.INSTANCE.add(connection, entity);
+        ConnectionPool.INSTANCE.releaseConnection(connection);
     }
 
     /**
