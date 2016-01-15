@@ -2,7 +2,9 @@ package by.pvt.khudnitsky.payments.services.impl;
 
 import by.pvt.khudnitsky.payments.constants.AccessLevels;
 import by.pvt.khudnitsky.payments.constants.UserType;
+import by.pvt.khudnitsky.payments.dao.impl.AccountDaoImpl;
 import by.pvt.khudnitsky.payments.dao.impl.UserDaoImpl;
+import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.services.AbstractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
@@ -132,5 +134,36 @@ public class UserServiceImpl extends AbstractService<User> {
             userType = UserType.ADMINISTRATOR;
         }
         return userType;
+    }
+
+    public boolean checkIsNewUser(User user) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
+        connection.setAutoCommit(false);
+        boolean isNew = false;
+        try {
+            if((AccountDaoImpl.getInstance().getById(user.getAccountId()) == null) & (UserDaoImpl.getInstance().isNewUser(user.getLogin()))){
+                isNew = true;
+            }
+            connection.commit();
+        }
+        catch(SQLException e){
+            connection.rollback();
+        }
+        PoolManager.getInstance().releaseConnection(connection);
+        return isNew;
+    }
+
+    public void registrateUser(User user, Account account) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
+        connection.setAutoCommit(false);
+        try {
+            AccountDaoImpl.getInstance().add(account);
+            UserDaoImpl.getInstance().add(user);
+            connection.commit();
+        }
+        catch(SQLException e){
+            connection.rollback();
+        }
+        PoolManager.getInstance().releaseConnection(connection);
     }
 }
