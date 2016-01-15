@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import by.pvt.khudnitsky.payments.web.commands.Command;
+import by.pvt.khudnitsky.payments.web.commands.ICommand;
 import by.pvt.khudnitsky.payments.web.commands.factory.CommandFactory;
-import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
-import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
+import by.pvt.khudnitsky.payments.constants.ConfigsConstants;
+import by.pvt.khudnitsky.payments.utils.managers.ConfigurationManagerImpl;
 
 /**
  * @author khudnitsky
@@ -23,15 +23,15 @@ import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
  */
 public class Controller extends HttpServlet{
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        CommandFactory commandFactory = CommandFactory.INSTANCE;
-        Command command = commandFactory.defineCommand(request);
-        String page = command.execute(request);
+        CommandFactory commandFactory = CommandFactory.getInstance();
+        ICommand ICommand = commandFactory.defineCommand(request);
+        String page = ICommand.execute(request);
         if(page != null){
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
             dispatcher.forward(request, response);
         }
         else{
-            page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.INDEX_PAGE_PATH);
+            page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.INDEX_PAGE_PATH);
             response.sendRedirect(request.getContextPath() + page);
         }
     }

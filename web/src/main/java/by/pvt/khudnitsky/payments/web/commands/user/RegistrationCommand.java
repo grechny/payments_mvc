@@ -8,18 +8,18 @@ import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import by.pvt.khudnitsky.payments.dao.impl.AccountDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
-import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
-import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
-import by.pvt.khudnitsky.payments.services.constants.MessageConstants;
-import by.pvt.khudnitsky.payments.services.constants.Parameters;
-import by.pvt.khudnitsky.payments.dao.implementations.AccountDao;
-import by.pvt.khudnitsky.payments.dao.implementations.UserDao;
-import by.pvt.khudnitsky.payments.services.utils.logger.PaymentSystemLogger;
-import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
-import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
+import by.pvt.khudnitsky.payments.utils.pool.ConnectionPool;
+import by.pvt.khudnitsky.payments.constants.ConfigsConstants;
+import by.pvt.khudnitsky.payments.constants.MessageConstants;
+import by.pvt.khudnitsky.payments.constants.Parameters;
+import by.pvt.khudnitsky.payments.dao.impl.UserDaoImpl;
+import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
+import by.pvt.khudnitsky.payments.utils.managers.ConfigurationManagerImpl;
+import by.pvt.khudnitsky.payments.utils.managers.MessageManagerImpl;
 
 /**
  * @author khudnitsky
@@ -35,7 +35,7 @@ public class RegistrationCommand extends AbstractCommand {
     private static String currency;
 
     /* (non-Javadoc)
-     * @see by.pvt.khudnitsky.payments.commands.Command#execute(javax.servlet.http.HttpServletRequest)
+     * @see by.pvt.khudnitsky.payments.commands.ICommand#execute(javax.servlet.http.HttpServletRequest)
      */
     @Override
     public String execute(HttpServletRequest request) {
@@ -48,41 +48,41 @@ public class RegistrationCommand extends AbstractCommand {
         currency = request.getParameter(Parameters.CURRENCY);
         Connection connection = null;
         try{
-            connection = ConnectionPool.INSTANCE.getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             if(areFieldsFullStocked()){
                 int accountId = Integer.valueOf(accountIdString);
                 if(isNewUser(connection, accountId)){
                     registrate(connection);
-                    page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.REGISTRATION_PAGE_PATH);
-                    request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.INSTANCE.getProperty(MessageConstants.SUCCESS_OPERATION));
+                    page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.REGISTRATION_PAGE_PATH);
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManagerImpl.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));
                 }
                 else{
-                    page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.REGISTRATION_PAGE_PATH);
-                    request.setAttribute(Parameters.ERROR_USER_EXSISTS, MessageManager.INSTANCE.getProperty(MessageConstants.USER_EXSISTS));
+                    page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.REGISTRATION_PAGE_PATH);
+                    request.setAttribute(Parameters.ERROR_USER_EXSISTS, MessageManagerImpl.getInstance().getProperty(MessageConstants.USER_EXSISTS));
                 }
             }
             else{
-                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.INSTANCE.getProperty(MessageConstants.EMPTY_FIELDS));
-                page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.REGISTRATION_PAGE_PATH);
+                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManagerImpl.getInstance().getProperty(MessageConstants.EMPTY_FIELDS));
+                page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.REGISTRATION_PAGE_PATH);
             }
         }
         catch (SQLException e) {
-            PaymentSystemLogger.INSTANCE.logError(getClass(), e.getMessage());
-            page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ERROR_PAGE_PATH);
-            request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.INSTANCE.getProperty(MessageConstants.ERROR_DATABASE));
+            PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
+            page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.ERROR_PAGE_PATH);
+            request.setAttribute(Parameters.ERROR_DATABASE, MessageManagerImpl.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
         }
         catch (NumberFormatException e) {
-            PaymentSystemLogger.INSTANCE.logError(getClass(), e.getMessage());
-            request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.INSTANCE.getProperty(MessageConstants.INVALID_NUMBER_FORMAT));
-            page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.REGISTRATION_PAGE_PATH);
+            PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
+            request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManagerImpl.getInstance().getProperty(MessageConstants.INVALID_NUMBER_FORMAT));
+            page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.REGISTRATION_PAGE_PATH);
         }
         catch(NullPointerException e){
-            PaymentSystemLogger.INSTANCE.logError(getClass(), e.getMessage());
-            page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.INDEX_PAGE_PATH);
+            PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
+            page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.INDEX_PAGE_PATH);
         }
         finally {
             if (connection != null){
-                ConnectionPool.INSTANCE.releaseConnection(connection);
+                ConnectionPool.getInstance().releaseConnection(connection);
             }
         }
         return page;
@@ -99,8 +99,8 @@ public class RegistrationCommand extends AbstractCommand {
         user.setAccountId(accountId);
         user.setLogin(login);
         user.setPassword(password);
-        AccountDao.INSTANCE.add(connection, account);
-        UserDao.INSTANCE.add(connection, user);
+        AccountDaoImpl.getInstance().add(connection, account);
+        UserDaoImpl.getInstance().add(connection, user);
     }
 
     private boolean areFieldsFullStocked(){
@@ -113,7 +113,7 @@ public class RegistrationCommand extends AbstractCommand {
 
     private boolean isNewUser(Connection connection, int accountId) throws SQLException{
         boolean isNew = false;
-        if((AccountDao.INSTANCE.getById(connection, accountId) == null) & (UserDao.INSTANCE.isNewUser(connection, login))){
+        if((AccountDaoImpl.getInstance().getById(connection, accountId) == null) & (UserDaoImpl.getInstance().isNewUser(connection, login))){
             isNew = true;
         }
         return isNew;

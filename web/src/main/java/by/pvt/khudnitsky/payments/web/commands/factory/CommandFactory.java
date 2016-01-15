@@ -5,20 +5,29 @@ package by.pvt.khudnitsky.payments.web.commands.factory;
 
 import javax.servlet.http.HttpServletRequest;
 
-import by.pvt.khudnitsky.payments.web.commands.Command;
+import by.pvt.khudnitsky.payments.web.commands.ICommand;
 import by.pvt.khudnitsky.payments.web.commands.user.LoginUserCommand;
-import by.pvt.khudnitsky.payments.services.constants.Parameters;
+import by.pvt.khudnitsky.payments.constants.Parameters;
 
 /**
  * @author khudnitsky
  * @version 1.0
  *
  */
-public enum CommandFactory {
-    INSTANCE;
+public class CommandFactory {
+    private static CommandFactory instance;
 
-    public Command defineCommand(HttpServletRequest request){
-        Command current = null;
+    private CommandFactory(){}
+
+    public static synchronized CommandFactory getInstance(){
+        if(instance == null){
+            instance = new CommandFactory();
+        }
+        return instance;
+    }
+
+    public ICommand defineCommand(HttpServletRequest request){
+        ICommand current = null;
         String commandName = request.getParameter(Parameters.COMMAND);
         try{
             CommandType type = CommandType.valueOf(commandName.toUpperCase());

@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<form name="registrationForm" method="POST" action="controller">
-			<input type="hidden" name="command" value="registration" /> 
+			<input type="hidden" name="command" value="registration" />
 			Введите ваши данные:<br/>
 			<table>
 				<tr>

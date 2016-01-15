@@ -3,11 +3,13 @@
  */
 package by.pvt.khudnitsky.payments.web.commands;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author khudnitsky
  * @version 1.0
  *
  */
-public abstract class AbstractCommand implements ICommand {
-
+public interface ICommand {
+    String execute(HttpServletRequest request);
 }

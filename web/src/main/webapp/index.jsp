@@ -7,7 +7,7 @@
 	</head>
 	<body>
 		<form name="loginForm" method="POST" action="controller">
-			<input type="hidden" name="command" value="login" /> 
+			<input type="hidden" name="command" value="login" />
 			Введите ваш логин и пароль: <br/>
 			<table>
 				<tr>

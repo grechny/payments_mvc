@@ -3,7 +3,7 @@
  */
 package by.pvt.khudnitsky.payments.web.commands.factory;
 
-import by.pvt.khudnitsky.payments.web.commands.Command;
+import by.pvt.khudnitsky.payments.web.commands.ICommand;
 import by.pvt.khudnitsky.payments.web.commands.admin.GoBackAdminCommand;
 import by.pvt.khudnitsky.payments.web.commands.admin.GoToUnblockCommand;
 import by.pvt.khudnitsky.payments.web.commands.admin.ShowClientsCommand;
@@ -37,7 +37,7 @@ public enum CommandType {
     // admin commands
     CLIENTS, OPERATIONS, UNBLOCK, GOTOUNBLOCK, BACKADMIN;
 
-    public Command getCurrentCommand() throws EnumConstantNotPresentException{
+    public ICommand getCurrentCommand() throws EnumConstantNotPresentException{
         switch(this){
             case LOGIN:
                 return new LoginUserCommand();

@@ -105,9 +105,8 @@ public class AccountServiceImpl extends AbsractService<Account> {
     }
 
     public boolean checkAccountStatus(int id) throws SQLException{
-        boolean isBlocked = false;
         connection = ConnectionPool.getInstance().getConnection();
-        isBlocked = AccountDaoImpl.getInstance().isAccountStatusBlocked(connection, id);
+        boolean isBlocked = AccountDaoImpl.getInstance().isAccountStatusBlocked(connection, id);
         ConnectionPool.getInstance().releaseConnection(connection);
         return isBlocked;
     }

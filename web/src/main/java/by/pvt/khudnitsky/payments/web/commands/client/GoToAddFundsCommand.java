@@ -6,11 +6,11 @@ package by.pvt.khudnitsky.payments.web.commands.client;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import by.pvt.khudnitsky.payments.dao.constants.UserType;
+import by.pvt.khudnitsky.payments.constants.UserType;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
-import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
-import by.pvt.khudnitsky.payments.services.constants.Parameters;
-import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
+import by.pvt.khudnitsky.payments.constants.ConfigsConstants;
+import by.pvt.khudnitsky.payments.constants.Parameters;
+import by.pvt.khudnitsky.payments.utils.managers.ConfigurationManagerImpl;
 
 /**
  * @author khudnitsky
@@ -25,10 +25,10 @@ public class GoToAddFundsCommand extends AbstractCommand {
         HttpSession session = request.getSession();
         UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
         if(userType == UserType.CLIENT){
-            page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.CLIENT_ADDFUNDS_PAGE_PATH);
+            page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.CLIENT_ADDFUNDS_PAGE_PATH);
         }
         else{
-            page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.INDEX_PAGE_PATH);
+            page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.INDEX_PAGE_PATH);
             session.invalidate();
         }
         return page;

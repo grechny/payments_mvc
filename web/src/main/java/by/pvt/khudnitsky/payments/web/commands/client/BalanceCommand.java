@@ -8,17 +8,17 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import by.pvt.khudnitsky.payments.dao.constants.UserType;
+import by.pvt.khudnitsky.payments.constants.UserType;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.User;
-import by.pvt.khudnitsky.payments.services.AccountService;
+import by.pvt.khudnitsky.payments.services.impl.AccountServiceImpl;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
-import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
-import by.pvt.khudnitsky.payments.services.constants.MessageConstants;
-import by.pvt.khudnitsky.payments.services.constants.Parameters;
-import by.pvt.khudnitsky.payments.services.utils.logger.PaymentSystemLogger;
-import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
-import by.pvt.khudnitsky.payments.services.utils.managers.MessageManager;
+import by.pvt.khudnitsky.payments.constants.ConfigsConstants;
+import by.pvt.khudnitsky.payments.constants.MessageConstants;
+import by.pvt.khudnitsky.payments.constants.Parameters;
+import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
+import by.pvt.khudnitsky.payments.utils.managers.ConfigurationManagerImpl;
+import by.pvt.khudnitsky.payments.utils.managers.MessageManagerImpl;
 
 /**
  * @author khudnitsky
@@ -35,19 +35,19 @@ public class BalanceCommand extends AbstractCommand {
         if(userType == UserType.CLIENT){
             User user = (User)session.getAttribute(Parameters.USER);
             try {
-                Account account = AccountService.INSTANCE.getById(user.getAccountId());
+                Account account = AccountServiceImpl.getInstance().getById(user.getAccountId());
                 request.setAttribute(Parameters.BALANCE, account.getAmount());
                 request.setAttribute(Parameters.CURRENCY, account.getCurrency());
-                page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.CLIENT_BALANCE_PAGE_PATH);
+                page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.CLIENT_BALANCE_PAGE_PATH);
             }
             catch (SQLException e) {
-                PaymentSystemLogger.INSTANCE.logError(getClass(), e.getMessage());
-                page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.ERROR_PAGE_PATH);
-                request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.INSTANCE.getProperty(MessageConstants.ERROR_DATABASE));
+                PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
+                page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.ERROR_PAGE_PATH);
+                request.setAttribute(Parameters.ERROR_DATABASE, MessageManagerImpl.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
             }
         }
         else{
-            page = ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.INDEX_PAGE_PATH);
+            page = ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.INDEX_PAGE_PATH);
             session.invalidate();
         }
         return page;

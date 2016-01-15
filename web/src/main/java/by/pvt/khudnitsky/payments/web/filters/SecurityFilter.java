@@ -3,9 +3,9 @@
  */
 package by.pvt.khudnitsky.payments.web.filters;
 
-import by.pvt.khudnitsky.payments.dao.constants.UserType;
-import by.pvt.khudnitsky.payments.services.constants.ConfigsConstants;
-import by.pvt.khudnitsky.payments.services.utils.managers.ConfigurationManager;
+import by.pvt.khudnitsky.payments.constants.UserType;
+import by.pvt.khudnitsky.payments.constants.ConfigsConstants;
+import by.pvt.khudnitsky.payments.utils.managers.ConfigurationManagerImpl;
 
 import java.io.IOException;
 import javax.servlet.Filter;
@@ -29,7 +29,7 @@ public class SecurityFilter implements Filter {
 
         UserType type = (UserType) session.getAttribute("userType");
         if (type == null) {
-          RequestDispatcher dispatcher = request.getRequestDispatcher(ConfigurationManager.INSTANCE.getProperty(ConfigsConstants.INDEX_PAGE_PATH));
+          RequestDispatcher dispatcher = request.getRequestDispatcher(ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.INDEX_PAGE_PATH));
           dispatcher.forward(httpRequest, httpResponse);
           return;
         }
