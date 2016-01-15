@@ -3,8 +3,7 @@ package by.pvt.khudnitsky.payments.services.impl;
 import by.pvt.khudnitsky.payments.dao.impl.OperationDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.services.AbsractService;
-import by.pvt.khudnitsky.payments.services.IService;
-import by.pvt.khudnitsky.payments.utils.pool.ConnectionPool;
+import by.pvt.khudnitsky.payments.pool.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.SQLException;

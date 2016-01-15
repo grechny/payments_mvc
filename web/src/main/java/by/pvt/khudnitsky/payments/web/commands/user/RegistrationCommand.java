@@ -12,7 +12,7 @@ import by.pvt.khudnitsky.payments.dao.impl.AccountDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.web.commands.AbstractCommand;
-import by.pvt.khudnitsky.payments.utils.pool.ConnectionPool;
+import by.pvt.khudnitsky.payments.pool.ConnectionPool;
 import by.pvt.khudnitsky.payments.constants.ConfigsConstants;
 import by.pvt.khudnitsky.payments.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.constants.Parameters;

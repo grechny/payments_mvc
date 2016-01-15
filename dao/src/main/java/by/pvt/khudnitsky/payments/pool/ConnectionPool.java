@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-package by.pvt.khudnitsky.payments.utils.pool;
+package by.pvt.khudnitsky.payments.pool;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import by.pvt.khudnitsky.payments.constants.ConfigsConstants;
-import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
+//import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 
 /**
  * @author khudnitsky
@@ -29,7 +29,7 @@ public class ConnectionPool {
             dataSource = (DataSource) initContext.lookup(ConfigsConstants.DATABASE_SOURCE);
         }
         catch(NamingException e){
-            PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
+            //PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
         }
     }
 
@@ -51,7 +51,7 @@ public class ConnectionPool {
                 connection.close();
             }
             catch (SQLException e) {
-                PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
+                //PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
             }
         }
     }
