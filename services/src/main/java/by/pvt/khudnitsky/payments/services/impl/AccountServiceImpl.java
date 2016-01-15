@@ -6,7 +6,7 @@ import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.constants.AccountStatus;
-import by.pvt.khudnitsky.payments.services.AbsractService;
+import by.pvt.khudnitsky.payments.services.AbstractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 import java.sql.Connection;
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-public class AccountServiceImpl extends AbsractService<Account> {
+public class AccountServiceImpl extends AbstractService<Account> {
     private static AccountServiceImpl instance;
 
     private AccountServiceImpl(){}

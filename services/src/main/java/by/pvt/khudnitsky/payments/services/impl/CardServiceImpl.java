@@ -1,8 +1,7 @@
 package by.pvt.khudnitsky.payments.services.impl;
 
 import by.pvt.khudnitsky.payments.entities.Card;
-import by.pvt.khudnitsky.payments.services.AbsractService;
-import by.pvt.khudnitsky.payments.services.IService;
+import by.pvt.khudnitsky.payments.services.AbstractService;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,7 +10,7 @@ import java.util.List;
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-public class CardServiceImpl extends AbsractService<Card> {
+public class CardServiceImpl extends AbstractService<Card> {
     private static CardServiceImpl instance;
     private Connection connection;
 

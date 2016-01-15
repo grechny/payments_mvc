@@ -6,7 +6,7 @@ import by.pvt.khudnitsky.payments.dao.impl.AccountDaoImpl;
 import by.pvt.khudnitsky.payments.dao.impl.UserDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.User;
-import by.pvt.khudnitsky.payments.services.AbsractService;
+import by.pvt.khudnitsky.payments.services.AbstractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 import java.sql.Connection;
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-public class UserServiceImpl extends AbsractService<User> {
+public class UserServiceImpl extends AbstractService<User> {
     private static UserServiceImpl instance;
 
     private UserServiceImpl(){}
