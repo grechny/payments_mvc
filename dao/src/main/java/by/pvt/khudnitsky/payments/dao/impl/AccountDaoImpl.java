@@ -8,6 +8,7 @@ import by.pvt.khudnitsky.payments.dao.IDao;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.constants.ColumnNames;
 import by.pvt.khudnitsky.payments.constants.SqlRequests;
+import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,7 +35,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     }
 
     @Override
-    public void add(Connection connection, Account account) throws SQLException {
+    public void add(Account account) throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.ADD_ACCOUNT_WITH_ID);
         statement.setInt(1, account.getId());
         statement.setDouble(2, account.getAmount());
@@ -44,7 +46,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     }
 
     @Override
-    public List<Account> getAll(Connection connection) throws SQLException {
+    public List<Account> getAll() throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_ACCOUNTS);
         ResultSet result = statement.executeQuery();
         List<Account> list = new ArrayList<>();
@@ -61,7 +64,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     }
 
     @Override
-    public Account getById(Connection connection, int id) throws SQLException{
+    public Account getById(int id) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ACCOUNT_BY_ID);
         statement.setInt(1, id);
         ResultSet result = statement.executeQuery();
@@ -76,7 +80,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         return account;
     }
 
-    public boolean isAccountStatusBlocked(Connection connection, int id) throws SQLException{
+    public boolean isAccountStatusBlocked(int id) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
         boolean isBlocked = false;
         PreparedStatement statement = connection.prepareStatement(SqlRequests.CHECK_ACCOUNT_STATUS);
         statement.setDouble(1, id);
@@ -89,7 +94,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         return isBlocked;
     }
 
-    public List<Account> getBlockedAccounts(Connection connection) throws SQLException{
+    public List<Account> getBlockedAccounts() throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_BLOCKED_ACCOUNTS);
         ResultSet result = statement.executeQuery();
         List<Account> list = new ArrayList<>();
@@ -112,14 +118,16 @@ public class AccountDaoImpl extends AbstractDao<Account> {
 //        statement.executeUpdate();
 //    }
 
-    public void updateAmount(Connection connection, double amount, int id) throws SQLException{
+    public void updateAmount(double amount, int id) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.MAKE_ACCOUNT_OPERATION);
         statement.setDouble(1, amount);
         statement.setInt(2, id);
         statement.executeUpdate();
     }
 
-    public void updateAccountStatus(Connection connection, int id, int status) throws SQLException{
+    public void updateAccountStatus(int id, int status) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.CHANGE_STATUS);
         statement.setInt(1, status);
         statement.setInt(2, id);
@@ -127,7 +135,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     }
 
     @Override
-    public void delete(Connection connection, int id)throws SQLException{
+    public void delete(int id)throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.DELETE_ACCOUNT_BY_ID);
         statement.setInt(1, id);
         statement.executeUpdate();

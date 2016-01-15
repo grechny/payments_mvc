@@ -16,9 +16,10 @@ import java.util.List;
  *
  */
 public interface IDao<T extends Entity> {
-    void add(Connection connection, T entity) throws SQLException;
-    List<T> getAll(Connection connection) throws SQLException;
-    T getById(Connection connection, int id) throws SQLException;
-    //void update(Connection connection, T entity) throws SQLException;
-    void delete(Connection connection, int id) throws SQLException;
+    void add(T entity) throws SQLException;
+    List<T> getAll() throws SQLException;
+    T getById(int id) throws SQLException;
+    void delete(int id) throws SQLException;
+
+    //void update(T entity) throws SQLException;
 }

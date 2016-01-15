@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.pvt.khudnitsky.payments.dao.AbstractDao;
-import by.pvt.khudnitsky.payments.dao.IDao;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.constants.ColumnNames;
 import by.pvt.khudnitsky.payments.constants.SqlRequests;
+import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 /**
  * @author khudnitsky
@@ -34,7 +34,8 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     }
 
     @Override
-    public List<Operation> getAll(Connection connection) throws SQLException {
+    public List<Operation> getAll() throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_OPERATIONS);
         ResultSet result = statement.executeQuery();
         List<Operation> list = new ArrayList<>();
@@ -52,7 +53,8 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     }
 
     @Override
-    public void add(Connection connection, Operation entity) throws SQLException {
+    public void add(Operation entity) throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.CREATE_OPERATION);
         statement.setInt(1, entity.getUserId());
         statement.setInt(2, entity.getAccountId());
@@ -62,12 +64,12 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     }
 
     @Override
-    public Operation getById(Connection connection, int id) throws SQLException {
+    public Operation getById(int id) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void delete(Connection connection, int id) throws SQLException {
+    public void delete(int id) throws SQLException {
         throw new UnsupportedOperationException();
     }
 }

@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.pvt.khudnitsky.payments.dao.AbstractDao;
-import by.pvt.khudnitsky.payments.dao.IDao;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.constants.ColumnNames;
 import by.pvt.khudnitsky.payments.constants.SqlRequests;
+import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 /**
  * @author khudnitsky
@@ -34,7 +34,8 @@ public class UserDaoImpl extends AbstractDao<User> {
     }
 
     @Override
-    public List<User> getAll(Connection connection) throws SQLException {
+    public List<User> getAll() throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_CLIENTS);
         ResultSet result = statement.executeQuery();
         List<User> list = new ArrayList<>();
@@ -47,7 +48,8 @@ public class UserDaoImpl extends AbstractDao<User> {
         return list;
     }
 
-    public User getByLogin(Connection connection, String login) throws SQLException{
+    public User getByLogin(String login) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
         User user = null;
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_USER_BY_LOGIN);
         statement.setString(1, login);
@@ -65,7 +67,8 @@ public class UserDaoImpl extends AbstractDao<User> {
         return user;
     }
 
-    public boolean isNewUser(Connection connection, String login) throws SQLException{
+    public boolean isNewUser(String login) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
         boolean isNew = true;
         PreparedStatement statement = connection.prepareStatement(SqlRequests.CHECK_LOGIN);
         statement.setString(1, login);
@@ -76,7 +79,8 @@ public class UserDaoImpl extends AbstractDao<User> {
         return isNew;
     }
 
-    public boolean isAuthorized(Connection connection, String login, String password) throws SQLException{
+    public boolean isAuthorized(String login, String password) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
         boolean isLogIn = false;
         PreparedStatement statement = connection.prepareStatement(SqlRequests.CHECK_AUTHORIZATION);
         statement.setString(1, login);
@@ -89,7 +93,8 @@ public class UserDaoImpl extends AbstractDao<User> {
     }
 
     @Override
-    public void add(Connection connection, User user) throws SQLException{
+    public void add(User user) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.ADD_USER);
         statement.setString(1, user.getFirstName());
         statement.setString(2, user.getLastName());
@@ -100,12 +105,12 @@ public class UserDaoImpl extends AbstractDao<User> {
     }
 
     @Override
-    public User getById(Connection connection, int id) throws SQLException {
+    public User getById(int id) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void delete(Connection connection, int id) throws SQLException {
+    public void delete(int id) throws SQLException {
         throw new UnsupportedOperationException();
     }
 }

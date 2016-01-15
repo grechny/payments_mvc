@@ -14,6 +14,7 @@ import by.pvt.khudnitsky.payments.dao.AbstractDao;
 import by.pvt.khudnitsky.payments.entities.Card;
 import by.pvt.khudnitsky.payments.constants.ColumnNames;
 import by.pvt.khudnitsky.payments.constants.SqlRequests;
+import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 /**
  * @author khudnitsky
@@ -33,7 +34,8 @@ public class CardDaoImpl extends AbstractDao<Card> {
     }
 
     @Override
-    public List<Card> getAll(Connection connection) throws SQLException {
+    public List<Card> getAll() throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_CARDS);
         ResultSet result = statement.executeQuery();
         List<Card> list = new ArrayList<>();
@@ -48,17 +50,17 @@ public class CardDaoImpl extends AbstractDao<Card> {
     }
 
 	    @Override
-    public void add(Connection connection, Card entity) throws SQLException {
+    public void add(Card entity) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Card getById(Connection connection, int id) throws SQLException {
+    public Card getById(int id) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void delete(Connection connection, int id) throws SQLException {
+    public void delete(int id) throws SQLException {
         throw new UnsupportedOperationException();
     }
 }
