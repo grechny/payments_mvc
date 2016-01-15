@@ -4,7 +4,7 @@ import by.pvt.khudnitsky.payments.constants.AccessLevels;
 import by.pvt.khudnitsky.payments.constants.UserType;
 import by.pvt.khudnitsky.payments.dao.impl.UserDaoImpl;
 import by.pvt.khudnitsky.payments.entities.User;
-import by.pvt.khudnitsky.payments.services.AbsractService;
+import by.pvt.khudnitsky.payments.services.AbstractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 import java.sql.Connection;
@@ -14,9 +14,8 @@ import java.util.List;
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-public class UserServiceImpl extends AbsractService<User> {
+public class UserServiceImpl extends AbstractService<User> {
     private static UserServiceImpl instance;
-    private Connection connection;
 
     private UserServiceImpl(){}
 
@@ -35,7 +34,7 @@ public class UserServiceImpl extends AbsractService<User> {
      */
     @Override
     public void add(User entity) throws SQLException {
-
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -46,8 +45,16 @@ public class UserServiceImpl extends AbsractService<User> {
      */
     @Override
     public List<User> getAll() throws SQLException {
-        connection = PoolManager.getInstance().getConnection();
-        List<User> users = UserDaoImpl.getInstance().getAll(connection);
+        Connection connection = PoolManager.getInstance().getConnection();
+        connection.setAutoCommit(false);
+        List<User> users = null;
+        try {
+            users = UserDaoImpl.getInstance().getAll();
+            connection.commit();
+        }
+        catch(SQLException e){
+            connection.rollback();
+        }
         PoolManager.getInstance().releaseConnection(connection);
         return users;
     }
@@ -61,7 +68,7 @@ public class UserServiceImpl extends AbsractService<User> {
      */
     @Override
     public User getById(int id) throws SQLException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -72,7 +79,7 @@ public class UserServiceImpl extends AbsractService<User> {
      */
     @Override
     public void update(User entity) throws SQLException {
-
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -83,19 +90,35 @@ public class UserServiceImpl extends AbsractService<User> {
      */
     @Override
     public void delete(int id) throws SQLException {
-
+        throw new UnsupportedOperationException();
     }
 
     public boolean checkUserAuthorization(String login, String password) throws SQLException{
-        connection = PoolManager.getInstance().getConnection();
-        boolean isAuthorized = UserDaoImpl.getInstance().isAuthorized(connection, login, password);
+        Connection connection = PoolManager.getInstance().getConnection();
+        connection.setAutoCommit(false);
+        boolean isAuthorized = false;
+        try {
+            isAuthorized = UserDaoImpl.getInstance().isAuthorized(login, password);
+            connection.commit();
+        }
+        catch(SQLException e){
+            connection.rollback();
+        }
         PoolManager.getInstance().releaseConnection(connection);
         return isAuthorized;
     }
 
     public User getUserByLogin(String login) throws SQLException{
-        connection = PoolManager.getInstance().getConnection();
-        User user = UserDaoImpl.getInstance().getByLogin(connection, login);
+        Connection connection = PoolManager.getInstance().getConnection();
+        connection.setAutoCommit(false);
+        User user = null;
+        try {
+            user = UserDaoImpl.getInstance().getByLogin(login);
+            connection.commit();
+        }
+        catch(SQLException e){
+            connection.rollback();
+        }
         PoolManager.getInstance().releaseConnection(connection);
         return user;
     }

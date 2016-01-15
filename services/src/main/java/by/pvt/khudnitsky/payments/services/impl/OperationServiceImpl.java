@@ -2,7 +2,7 @@ package by.pvt.khudnitsky.payments.services.impl;
 
 import by.pvt.khudnitsky.payments.dao.impl.OperationDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Operation;
-import by.pvt.khudnitsky.payments.services.AbsractService;
+import by.pvt.khudnitsky.payments.services.AbstractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 import java.sql.Connection;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-public class OperationServiceImpl extends AbsractService<Operation> {
+public class OperationServiceImpl extends AbstractService<Operation> {
     private static OperationServiceImpl instance;
 
     private OperationServiceImpl(){}
@@ -35,7 +35,7 @@ public class OperationServiceImpl extends AbsractService<Operation> {
         Connection connection = PoolManager.getInstance().getConnection();
         connection.setAutoCommit(false);
         try {
-            OperationDaoImpl.getInstance().add(connection, entity);
+            OperationDaoImpl.getInstance().add(entity);
             connection.commit();
         }
         catch(SQLException e){
@@ -56,7 +56,7 @@ public class OperationServiceImpl extends AbsractService<Operation> {
         Connection connection = PoolManager.getInstance().getConnection();
         connection.setAutoCommit(false);
         try {
-            operations = OperationDaoImpl.getInstance().getAll(connection);
+            operations = OperationDaoImpl.getInstance().getAll();
             connection.commit();
         }
         catch(SQLException e){
@@ -75,7 +75,7 @@ public class OperationServiceImpl extends AbsractService<Operation> {
      */
     @Override
     public Operation getById(int id) throws SQLException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -86,7 +86,7 @@ public class OperationServiceImpl extends AbsractService<Operation> {
      */
     @Override
     public void update(Operation entity) throws SQLException {
-
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -97,6 +97,6 @@ public class OperationServiceImpl extends AbsractService<Operation> {
      */
     @Override
     public void delete(int id) throws SQLException {
-
+        throw new UnsupportedOperationException();
     }
 }
