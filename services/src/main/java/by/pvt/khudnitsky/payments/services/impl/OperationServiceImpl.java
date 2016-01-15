@@ -2,7 +2,7 @@ package by.pvt.khudnitsky.payments.services.impl;
 
 import by.pvt.khudnitsky.payments.dao.impl.OperationDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Operation;
-import by.pvt.khudnitsky.payments.services.AbstractService;
+import by.pvt.khudnitsky.payments.services.AbsractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 import java.sql.Connection;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-public class OperationServiceImpl extends AbstractService<Operation> {
+public class OperationServiceImpl extends AbsractService<Operation> {
     private static OperationServiceImpl instance;
 
     private OperationServiceImpl(){}
