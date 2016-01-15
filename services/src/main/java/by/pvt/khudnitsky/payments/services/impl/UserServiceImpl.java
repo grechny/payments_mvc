@@ -5,7 +5,7 @@ import by.pvt.khudnitsky.payments.constants.UserType;
 import by.pvt.khudnitsky.payments.dao.impl.UserDaoImpl;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.services.AbsractService;
-import by.pvt.khudnitsky.payments.pool.ConnectionPool;
+import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -46,9 +46,9 @@ public class UserServiceImpl extends AbsractService<User> {
      */
     @Override
     public List<User> getAll() throws SQLException {
-        connection = ConnectionPool.getInstance().getConnection();
+        connection = PoolManager.getInstance().getConnection();
         List<User> users = UserDaoImpl.getInstance().getAll(connection);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        PoolManager.getInstance().releaseConnection(connection);
         return users;
     }
 
@@ -87,16 +87,16 @@ public class UserServiceImpl extends AbsractService<User> {
     }
 
     public boolean checkUserAuthorization(String login, String password) throws SQLException{
-        connection = ConnectionPool.getInstance().getConnection();
+        connection = PoolManager.getInstance().getConnection();
         boolean isAuthorized = UserDaoImpl.getInstance().isAuthorized(connection, login, password);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        PoolManager.getInstance().releaseConnection(connection);
         return isAuthorized;
     }
 
     public User getUserByLogin(String login) throws SQLException{
-        connection = ConnectionPool.getInstance().getConnection();
+        connection = PoolManager.getInstance().getConnection();
         User user = UserDaoImpl.getInstance().getByLogin(connection, login);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        PoolManager.getInstance().releaseConnection(connection);
         return user;
     }
 

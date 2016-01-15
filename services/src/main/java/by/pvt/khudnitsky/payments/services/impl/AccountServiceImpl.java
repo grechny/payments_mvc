@@ -7,7 +7,7 @@ import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.constants.AccountStatus;
 import by.pvt.khudnitsky.payments.services.AbsractService;
-import by.pvt.khudnitsky.payments.pool.ConnectionPool;
+import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -37,9 +37,9 @@ public class AccountServiceImpl extends AbsractService<Account> {
      */
     @Override
     public void add(Account entity) throws SQLException {
-        Connection connection = ConnectionPool.getInstance().getConnection();
+        Connection connection = PoolManager.getInstance().getConnection();
         AccountDaoImpl.getInstance().add(connection, entity);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        PoolManager.getInstance().releaseConnection(connection);
     }
 
     /**
@@ -62,9 +62,9 @@ public class AccountServiceImpl extends AbsractService<Account> {
      */
     @Override
     public Account getById(int id) throws SQLException {
-        connection = ConnectionPool.getInstance().getConnection();
+        connection = PoolManager.getInstance().getConnection();
         Account account = AccountDaoImpl.getInstance().getById(connection, id);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        PoolManager.getInstance().releaseConnection(connection);
         return account;
     }
 
@@ -91,28 +91,28 @@ public class AccountServiceImpl extends AbsractService<Account> {
     }
 
     public List<Account> getBlockedAccounts() throws SQLException{
-        connection = ConnectionPool.getInstance().getConnection();
+        connection = PoolManager.getInstance().getConnection();
         List<Account> accounts= AccountDaoImpl.getInstance().getBlockedAccounts(connection);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        PoolManager.getInstance().releaseConnection(connection);
         return accounts;
     }
 
     // TODO Объединить в транзакцию
     public void updateAccountStatus(int id, int status) throws SQLException{
-        connection = ConnectionPool.getInstance().getConnection();
+        connection = PoolManager.getInstance().getConnection();
         AccountDaoImpl.getInstance().updateAccountStatus(connection, id, status);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        PoolManager.getInstance().releaseConnection(connection);
     }
 
     public boolean checkAccountStatus(int id) throws SQLException{
-        connection = ConnectionPool.getInstance().getConnection();
+        connection = PoolManager.getInstance().getConnection();
         boolean isBlocked = AccountDaoImpl.getInstance().isAccountStatusBlocked(connection, id);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        PoolManager.getInstance().releaseConnection(connection);
         return isBlocked;
     }
 
     public void addFunds(User user, String description, double amount) throws SQLException{
-        connection = ConnectionPool.getInstance().getConnection();
+        connection = PoolManager.getInstance().getConnection();
         Operation operation = new Operation();
         operation.setUserId(user.getId());
         operation.setAccountId(user.getAccountId());
@@ -120,20 +120,20 @@ public class AccountServiceImpl extends AbsractService<Account> {
         operation.setDescription(description);
         OperationServiceImpl.getInstance().add(operation);
         AccountDaoImpl.getInstance().updateAmount(connection, amount, user.getAccountId());
-        ConnectionPool.getInstance().releaseConnection(connection);
+        PoolManager.getInstance().releaseConnection(connection);
     }
 
 
     // TODO истправить создание двух connection
     public void blockAccount(User user, String description) throws SQLException{
-        connection = ConnectionPool.getInstance().getConnection();
+        connection = PoolManager.getInstance().getConnection();
         Operation operation = new Operation();
         operation.setUserId(user.getId());
         operation.setAccountId(user.getAccountId());
         operation.setDescription(description);
         OperationDaoImpl.getInstance().add(connection, operation);
         updateAccountStatus(user.getId(), AccountStatus.BLOCKED);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        PoolManager.getInstance().releaseConnection(connection);
     }
 
     public void payment(User user, String description, double amount) throws SQLException{

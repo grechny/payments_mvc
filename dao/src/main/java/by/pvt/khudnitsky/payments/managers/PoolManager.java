@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-package by.pvt.khudnitsky.payments.pool;
+package by.pvt.khudnitsky.payments.managers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,31 +18,35 @@ import by.pvt.khudnitsky.payments.constants.ConfigsConstants;
  * @version 1.0
  *
  */
-public class ConnectionPool {
+public class PoolManager {
+    private static PoolManager instance;
+    private static ThreadLocal<Connection> connectionHolder = new ThreadLocal<>();
     private DataSource dataSource;
-    private Connection connection;
-    private static ConnectionPool instance;
 
-    private ConnectionPool() {
+    private PoolManager() {
         try{
             InitialContext initContext = new InitialContext();
             dataSource = (DataSource) initContext.lookup(ConfigsConstants.DATABASE_SOURCE);
+            connectionHolder.set(dataSource.getConnection());
         }
         catch(NamingException e){
             //PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
         }
+        catch (SQLException e) {
+            e.printStackTrace();
+            // TODO logger
+        }
     }
 
-    public static synchronized ConnectionPool getInstance(){
+    public static synchronized PoolManager getInstance(){
         if(instance == null){
-            instance = new ConnectionPool();
+            instance = new PoolManager();
         }
         return instance;
     }
 
     public Connection getConnection() throws SQLException{
-        connection = dataSource.getConnection();
-        return connection;
+        return connectionHolder.get();
     }
 
     public void releaseConnection(Connection connection) {
@@ -56,3 +60,4 @@ public class ConnectionPool {
         }
     }
 }
+

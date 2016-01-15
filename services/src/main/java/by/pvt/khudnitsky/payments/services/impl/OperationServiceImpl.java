@@ -3,7 +3,7 @@ package by.pvt.khudnitsky.payments.services.impl;
 import by.pvt.khudnitsky.payments.dao.impl.OperationDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.services.AbsractService;
-import by.pvt.khudnitsky.payments.pool.ConnectionPool;
+import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,7 +14,6 @@ import java.util.List;
  */
 public class OperationServiceImpl extends AbsractService<Operation> {
     private static OperationServiceImpl instance;
-    private Connection connection;
 
     private OperationServiceImpl(){}
 
@@ -33,9 +32,16 @@ public class OperationServiceImpl extends AbsractService<Operation> {
      */
     @Override
     public void add(Operation entity) throws SQLException {
-        connection = ConnectionPool.getInstance().getConnection();
-        OperationDaoImpl.getInstance().add(connection, entity);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        Connection connection = PoolManager.getInstance().getConnection();
+        connection.setAutoCommit(false);
+        try {
+            OperationDaoImpl.getInstance().add(connection, entity);
+            connection.commit();
+        }
+        catch(SQLException e){
+            connection.rollback();
+        }
+        PoolManager.getInstance().releaseConnection(connection);
     }
 
     /**
@@ -46,9 +52,17 @@ public class OperationServiceImpl extends AbsractService<Operation> {
      */
     @Override
     public List<Operation> getAll() throws SQLException {
-        connection = ConnectionPool.getInstance().getConnection();
-        List<Operation> operations = OperationDaoImpl.getInstance().getAll(connection);
-        ConnectionPool.getInstance().releaseConnection(connection);
+        List<Operation> operations = null;
+        Connection connection = PoolManager.getInstance().getConnection();
+        connection.setAutoCommit(false);
+        try {
+            operations = OperationDaoImpl.getInstance().getAll(connection);
+            connection.commit();
+        }
+        catch(SQLException e){
+            connection.rollback();
+        }
+        PoolManager.getInstance().releaseConnection(connection);
         return operations;
     }
 
