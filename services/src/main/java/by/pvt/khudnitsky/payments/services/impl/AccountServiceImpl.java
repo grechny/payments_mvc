@@ -1,15 +1,14 @@
-package by.pvt.khudnitsky.payments.services;
+package by.pvt.khudnitsky.payments.services.impl;
 
-import by.pvt.khudnitsky.payments.dao.implementations.AccountDao;
-import by.pvt.khudnitsky.payments.dao.implementations.OperationDao;
+import by.pvt.khudnitsky.payments.dao.impl.AccountDaoImpl;
+import by.pvt.khudnitsky.payments.dao.impl.OperationDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.entities.User;
-import by.pvt.khudnitsky.payments.services.constants.AccountStatus;
-import by.pvt.khudnitsky.payments.services.constants.Parameters;
-import by.pvt.khudnitsky.payments.services.utils.pool.ConnectionPool;
+import by.pvt.khudnitsky.payments.constants.AccountStatus;
+import by.pvt.khudnitsky.payments.services.AbsractService;
+import by.pvt.khudnitsky.payments.utils.pool.ConnectionPool;
 
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,26 +16,34 @@ import java.util.List;
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
-public enum AccountService implements Service <Account>{
-    INSTANCE;
-
+public class AccountServiceImpl extends AbsractService<Account> {
+    private static AccountServiceImpl instance;
     private Connection connection;
 
+    private AccountServiceImpl(){}
+
+    public static synchronized AccountServiceImpl getInstance(){
+        if(instance == null){
+            instance = new AccountServiceImpl();
+        }
+        return instance;
+    }
+
     /**
-     * Calls AccountDao add() method
+     * Calls AccountDaoImpl add() method
      *
      * @param entity - Account object
      * @throws SQLException
      */
     @Override
     public void add(Account entity) throws SQLException {
-        Connection connection = ConnectionPool.INSTANCE.getConnection();
-        AccountDao.INSTANCE.add(connection, entity);
-        ConnectionPool.INSTANCE.releaseConnection(connection);
+        Connection connection = ConnectionPool.getInstance().getConnection();
+        AccountDaoImpl.getInstance().add(connection, entity);
+        ConnectionPool.getInstance().releaseConnection(connection);
     }
 
     /**
-     * Calls AccountDao getAll() method
+     * Calls AccountDaoImpl getAll() method
      *
      * @return list of Account objects
      * @throws SQLException
@@ -47,7 +54,7 @@ public enum AccountService implements Service <Account>{
     }
 
     /**
-     * Calls AccountDao getById() method
+     * Calls AccountDaoImpl getById() method
      *
      * @param id - Account id
      * @return Account object
@@ -55,14 +62,14 @@ public enum AccountService implements Service <Account>{
      */
     @Override
     public Account getById(int id) throws SQLException {
-        connection = ConnectionPool.INSTANCE.getConnection();
-        Account account = AccountDao.INSTANCE.getById(connection, id);
-        ConnectionPool.INSTANCE.releaseConnection(connection);
+        connection = ConnectionPool.getInstance().getConnection();
+        Account account = AccountDaoImpl.getInstance().getById(connection, id);
+        ConnectionPool.getInstance().releaseConnection(connection);
         return account;
     }
 
     /**
-     * Calls AccountDao update() method
+     * Calls AccountDaoImpl update() method
      *
      * @param entity - Account object
      * @throws SQLException
@@ -73,7 +80,7 @@ public enum AccountService implements Service <Account>{
     }
 
     /**
-     * Calls AccountDao delete() method
+     * Calls AccountDaoImpl delete() method
      *
      * @param id - Account id
      * @throws SQLException
@@ -84,50 +91,50 @@ public enum AccountService implements Service <Account>{
     }
 
     public List<Account> getBlockedAccounts() throws SQLException{
-        connection = ConnectionPool.INSTANCE.getConnection();
-        List<Account> accounts= AccountDao.INSTANCE.getBlockedAccounts(connection);
-        ConnectionPool.INSTANCE.releaseConnection(connection);
+        connection = ConnectionPool.getInstance().getConnection();
+        List<Account> accounts= AccountDaoImpl.getInstance().getBlockedAccounts(connection);
+        ConnectionPool.getInstance().releaseConnection(connection);
         return accounts;
     }
 
     // TODO Объединить в транзакцию
     public void updateAccountStatus(int id, int status) throws SQLException{
-        connection = ConnectionPool.INSTANCE.getConnection();
-        AccountDao.INSTANCE.updateAccountStatus(connection, id, status);
-        ConnectionPool.INSTANCE.releaseConnection(connection);
+        connection = ConnectionPool.getInstance().getConnection();
+        AccountDaoImpl.getInstance().updateAccountStatus(connection, id, status);
+        ConnectionPool.getInstance().releaseConnection(connection);
     }
 
     public boolean checkAccountStatus(int id) throws SQLException{
         boolean isBlocked = false;
-        connection = ConnectionPool.INSTANCE.getConnection();
-        AccountDao.INSTANCE.isAccountStatusBlocked(connection, id);
-        ConnectionPool.INSTANCE.releaseConnection(connection);
+        connection = ConnectionPool.getInstance().getConnection();
+        isBlocked = AccountDaoImpl.getInstance().isAccountStatusBlocked(connection, id);
+        ConnectionPool.getInstance().releaseConnection(connection);
         return isBlocked;
     }
 
     public void addFunds(User user, String description, double amount) throws SQLException{
-        connection = ConnectionPool.INSTANCE.getConnection();
+        connection = ConnectionPool.getInstance().getConnection();
         Operation operation = new Operation();
         operation.setUserId(user.getId());
         operation.setAccountId(user.getAccountId());
         operation.setAmount(amount);
         operation.setDescription(description);
-        OperationService.INSTANCE.add(operation);
-        AccountDao.INSTANCE.updateAmount(connection, amount, user.getAccountId());
-        ConnectionPool.INSTANCE.releaseConnection(connection);
+        OperationServiceImpl.getInstance().add(operation);
+        AccountDaoImpl.getInstance().updateAmount(connection, amount, user.getAccountId());
+        ConnectionPool.getInstance().releaseConnection(connection);
     }
 
 
     // TODO истправить создание двух connection
     public void blockAccount(User user, String description) throws SQLException{
-        connection = ConnectionPool.INSTANCE.getConnection();
+        connection = ConnectionPool.getInstance().getConnection();
         Operation operation = new Operation();
         operation.setUserId(user.getId());
         operation.setAccountId(user.getAccountId());
         operation.setDescription(description);
-        OperationService.INSTANCE.add(operation);
+        OperationDaoImpl.getInstance().add(connection, operation);
         updateAccountStatus(user.getId(), AccountStatus.BLOCKED);
-        ConnectionPool.INSTANCE.releaseConnection(connection);
+        ConnectionPool.getInstance().releaseConnection(connection);
     }
 
     public void payment(User user, String description, double amount) throws SQLException{
@@ -136,7 +143,7 @@ public enum AccountService implements Service <Account>{
         operation.setAccountId(user.getAccountId());
         operation.setAmount(amount);
         operation.setDescription(description);
-        OperationService.INSTANCE.add(operation);
-        AccountDao.INSTANCE.updateAmount(connection, (-1) * amount, user.getAccountId());
+        OperationDaoImpl.getInstance().add(connection, operation);
+        AccountDaoImpl.getInstance().updateAmount(connection, (-1) * amount, user.getAccountId());
     }
 }
