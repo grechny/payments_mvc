@@ -33,7 +33,7 @@ public class PageRedirectFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         // переход на стартовую страницу
-        httpResponse.sendRedirect(httpRequest.getContextPath() + ConfigurationManagerImpl.INSTANCE.getProperty(ConfigsConstants.INDEX_PAGE_PATH));
+        httpResponse.sendRedirect(httpRequest.getContextPath() + ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.INDEX_PAGE_PATH));
         chain.doFilter(request, response);
     }
 
