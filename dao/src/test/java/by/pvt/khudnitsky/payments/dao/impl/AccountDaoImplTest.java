@@ -54,37 +54,37 @@ public class AccountDaoImplTest {
     @Test
     public void testGetById() throws Exception {
         Account expected = createAccountForTest(1, "ADMIN", 0, 0);
-        Account actual = AccountDaoImpl.getInstance().getById(connection, 1);
+        Account actual = AccountDaoImpl.getInstance().getById(1);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void testCreate() throws Exception{
         Account expected = createAccountForTest(100, "TEST", 100, 0);
-        AccountDaoImpl.getInstance().add(connection, expected);
-        Account actual = AccountDaoImpl.getInstance().getById(connection, expected.getId());
+        AccountDaoImpl.getInstance().add(expected);
+        Account actual = AccountDaoImpl.getInstance().getById(expected.getId());
         Assert.assertEquals(expected, actual);
-        AccountDaoImpl.getInstance().delete(connection, expected.getId());
+        AccountDaoImpl.getInstance().delete(expected.getId());
     }
 
     @Test
     public void testDeleteById() throws Exception{
         Account account = createAccountForTest(100, "TEST", 100, 0);
-        AccountDaoImpl.getInstance().add(connection, account);
-        AccountDaoImpl.getInstance().delete(connection, account.getId());
-        Account actual = AccountDaoImpl.getInstance().getById(connection, account.getId());
+        AccountDaoImpl.getInstance().add(account);
+        AccountDaoImpl.getInstance().delete(account.getId());
+        Account actual = AccountDaoImpl.getInstance().getById(account.getId());
         Assert.assertNull(actual);
     }
 
     @Test
     public void testUpdateAmount() throws Exception {
         Account expected = createAccountForTest(100, "TEST", 100, 0);
-        AccountDaoImpl.getInstance().add(connection, expected);
+        AccountDaoImpl.getInstance().add(expected);
         double adding = 100;
         expected.setAmount(expected.getAmount() + adding);
-        AccountDaoImpl.getInstance().updateAmount(connection, adding, expected.getId());
-        Account actual = AccountDaoImpl.getInstance().getById(connection, expected.getId());
+        AccountDaoImpl.getInstance().updateAmount(adding, expected.getId());
+        Account actual = AccountDaoImpl.getInstance().getById(expected.getId());
         Assert.assertEquals(expected, actual);
-        AccountDaoImpl.getInstance().delete(connection, expected.getId());
+        AccountDaoImpl.getInstance().delete(expected.getId());
     }
 }
