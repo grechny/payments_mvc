@@ -45,7 +45,7 @@ public class AccountServiceImpl extends AbstractService<Account> {
         catch(SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
     }
 
     /**
@@ -78,7 +78,7 @@ public class AccountServiceImpl extends AbstractService<Account> {
         catch (SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
         return account;
     }
 
@@ -115,7 +115,7 @@ public class AccountServiceImpl extends AbstractService<Account> {
         catch (SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
         return accounts;
     }
 
@@ -130,7 +130,7 @@ public class AccountServiceImpl extends AbstractService<Account> {
         catch (SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
     }
 
     public boolean checkAccountStatus(int id) throws SQLException{
@@ -144,7 +144,7 @@ public class AccountServiceImpl extends AbstractService<Account> {
         catch (SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
         return isBlocked;
     }
 
@@ -160,7 +160,7 @@ public class AccountServiceImpl extends AbstractService<Account> {
         catch (SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
     }
 
     public void blockAccount(User user, String description) throws SQLException{
@@ -175,7 +175,7 @@ public class AccountServiceImpl extends AbstractService<Account> {
         catch (SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
     }
 
     public void payment(User user, String description, double amount) throws SQLException{
@@ -190,7 +190,7 @@ public class AccountServiceImpl extends AbstractService<Account> {
         catch (SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
     }
 
     private Operation buildOperation(User user, String description, double amount){

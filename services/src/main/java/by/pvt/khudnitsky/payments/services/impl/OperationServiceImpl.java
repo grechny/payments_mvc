@@ -41,7 +41,7 @@ public class OperationServiceImpl extends AbstractService<Operation> {
         catch(SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
     }
 
     /**
@@ -62,7 +62,7 @@ public class OperationServiceImpl extends AbstractService<Operation> {
         catch(SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
         return operations;
     }
 

@@ -20,23 +20,27 @@ import by.pvt.khudnitsky.payments.constants.ConfigsConstants;
  */
 public class PoolManager {
     private static PoolManager instance;
-    private static ThreadLocal<Connection> connectionHolder = new ThreadLocal<>();
-    private DataSource dataSource;
+    private static DataSource dataSource;
+    private static ThreadLocal<Connection> connectionHolder = new ThreadLocal<Connection>(){
+        public Connection initialValue(){
+            Connection connection = null;
+            try{
+                InitialContext initContext = new InitialContext();
+                dataSource = (DataSource) initContext.lookup(ConfigsConstants.DATABASE_SOURCE);
+                connection = dataSource.getConnection();
+            }
+            catch(NamingException e){
+                //PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                // TODO logger
+            }
+            return connection;
+        }
+    };
 
-    private PoolManager() {
-        try{
-            InitialContext initContext = new InitialContext();
-            dataSource = (DataSource) initContext.lookup(ConfigsConstants.DATABASE_SOURCE);
-            connectionHolder.set(dataSource.getConnection());
-        }
-        catch(NamingException e){
-            //PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-            // TODO logger
-        }
-    }
+    private PoolManager() {}
 
     public static synchronized PoolManager getInstance(){
         if(instance == null){
@@ -46,18 +50,19 @@ public class PoolManager {
     }
 
     public Connection getConnection() throws SQLException{
+        System.out.println("Взяли" + connectionHolder.get());
         return connectionHolder.get();
     }
 
-    public void releaseConnection(Connection connection) {
-        if(connection != null){
-            try {
-                connection.close();
-            }
-            catch (SQLException e) {
-                //PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
-            }
-        }
-    }
+//    public void releaseConnection(Connection connection) {
+//        if(connection != null){
+//            try {
+//                connection.close();
+//            }
+//            catch (SQLException e) {
+//                //PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
+//            }
+//        }
+//    }
 }
 

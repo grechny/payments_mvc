@@ -57,7 +57,7 @@ public class UserServiceImpl extends AbstractService<User> {
         catch(SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
         return users;
     }
 
@@ -106,7 +106,7 @@ public class UserServiceImpl extends AbstractService<User> {
         catch(SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
         return isAuthorized;
     }
 
@@ -121,7 +121,7 @@ public class UserServiceImpl extends AbstractService<User> {
         catch(SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
         return user;
     }
 
@@ -149,7 +149,7 @@ public class UserServiceImpl extends AbstractService<User> {
         catch(SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
         return isNew;
     }
 
@@ -164,6 +164,6 @@ public class UserServiceImpl extends AbstractService<User> {
         catch(SQLException e){
             connection.rollback();
         }
-        PoolManager.getInstance().releaseConnection(connection);
+        //PoolManager.getInstance().releaseConnection(connection);
     }
 }
