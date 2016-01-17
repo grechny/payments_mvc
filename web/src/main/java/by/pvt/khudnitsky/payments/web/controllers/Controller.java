@@ -24,8 +24,8 @@ import by.pvt.khudnitsky.payments.utils.managers.ConfigurationManagerImpl;
 public class Controller extends HttpServlet{
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         CommandFactory commandFactory = CommandFactory.getInstance();
-        ICommand ICommand = commandFactory.defineCommand(request);
-        String page = ICommand.execute(request);
+        ICommand сommand = commandFactory.defineCommand(request);
+        String page = сommand.execute(request);
         if(page != null){
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
             dispatcher.forward(request, response);
