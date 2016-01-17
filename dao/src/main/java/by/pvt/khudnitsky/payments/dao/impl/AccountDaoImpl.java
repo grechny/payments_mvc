@@ -51,7 +51,6 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_ACCOUNTS);
         ResultSet result = statement.executeQuery();
         List<Account> list = new ArrayList<>();
-
         while(result.next()){
             Account account = new Account();
             account.setAmount(result.getDouble(ColumnNames.ACCOUNT_AMOUNT));
@@ -109,14 +108,6 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         return list;
     }
-//
-//    @Override
-//    public void update(Connection connection, Account account) throws SQLException{
-//        PreparedStatement statement = connection.prepareStatement(SqlRequests.MAKE_ACCOUNT_OPERATION);
-//        statement.setDouble(1, amount);
-//        statement.setInt(2, id);
-//        statement.executeUpdate();
-//    }
 
     public void updateAmount(double amount, int id) throws SQLException{
         Connection connection = PoolManager.getInstance().getConnection();
