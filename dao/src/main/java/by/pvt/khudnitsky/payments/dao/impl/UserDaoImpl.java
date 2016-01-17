@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.pvt.khudnitsky.payments.dao.AbstractDao;
+import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.constants.ColumnNames;
 import by.pvt.khudnitsky.payments.constants.SqlRequests;
@@ -34,6 +35,18 @@ public class UserDaoImpl extends AbstractDao<User> {
     }
 
     @Override
+    public void add(User user) throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SqlRequests.ADD_USER);
+        statement.setString(1, user.getFirstName());
+        statement.setString(2, user.getLastName());
+        statement.setInt(3, user.getAccountId());
+        statement.setString(4, user.getLogin());
+        statement.setString(5, user.getPassword());
+        statement.executeUpdate();
+    }
+
+    @Override
     public List<User> getAll() throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_CLIENTS);
@@ -48,21 +61,27 @@ public class UserDaoImpl extends AbstractDao<User> {
         return list;
     }
 
+    @Override
+    public User getById(int id) throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_USER_BY_ID);
+        statement.setInt(1, id);
+        ResultSet result = statement.executeQuery();
+        User user = null;
+        while(result.next()){
+            user = buildUser(result);
+        }
+        return user;
+    }
+
     public User getByLogin(String login) throws SQLException{
         Connection connection = PoolManager.getInstance().getConnection();
-        User user = null;
         PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_USER_BY_LOGIN);
         statement.setString(1, login);
         ResultSet result = statement.executeQuery();
+        User user = null;
         while(result.next()){
-            user = new User();
-            user.setId(result.getInt(ColumnNames.USER_ID));
-            user.setFirstName(result.getString(ColumnNames.USER_FIRST_NAME));
-            user.setLastName(result.getString(ColumnNames.USER_LAST_NAME));
-            user.setLogin(result.getString(ColumnNames.USER_LOGIN));
-            user.setPassword(result.getString(ColumnNames.USER_PASSWORD));
-            user.setAccountId(result.getInt(ColumnNames.ACCOUNT_ID));
-            user.setAccessLevel(result.getInt(ColumnNames.USER_ACCESS_LEVEL));
+            user = buildUser(result);
         }
         return user;
     }
@@ -93,24 +112,34 @@ public class UserDaoImpl extends AbstractDao<User> {
     }
 
     @Override
-    public void add(User user) throws SQLException{
+    public int getMaxId() throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.ADD_USER);
-        statement.setString(1, user.getFirstName());
-        statement.setString(2, user.getLastName());
-        statement.setInt(3, user.getAccountId());
-        statement.setString(4, user.getLogin());
-        statement.setString(5, user.getPassword());
-        statement.executeUpdate();
-    }
-
-    @Override
-    public User getById(int id) throws SQLException {
-        throw new UnsupportedOperationException();
+        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_LAST_USER_ID);
+        ResultSet result = statement.executeQuery();
+        int lastId = -1;
+        while(result.next()){
+            lastId = result.getInt(1);
+        }
+        return lastId;
     }
 
     @Override
     public void delete(int id) throws SQLException {
-        throw new UnsupportedOperationException();
+        Connection connection = PoolManager.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SqlRequests.DELETE_USER_BY_ID);
+        statement.setInt(1, id);
+        statement.executeUpdate();
+    }
+
+    private User buildUser(ResultSet result) throws SQLException{
+        int id = result.getInt(ColumnNames.USER_ID);
+        String firstName = result.getString(ColumnNames.USER_FIRST_NAME);
+        String lastName = result.getString(ColumnNames.USER_LAST_NAME);
+        int accountId = result.getInt(ColumnNames.ACCOUNT_ID);
+        String login = result.getString(ColumnNames.USER_LOGIN);
+        String password = result.getString(ColumnNames.USER_PASSWORD);
+        int accessLevel = result.getInt(ColumnNames.USER_ACCESS_LEVEL);
+        User user = EntityBuilder.buildUser(id, firstName, lastName, accountId, login, password, accessLevel);
+        return user;
     }
 }

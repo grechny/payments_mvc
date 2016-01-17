@@ -20,6 +20,6 @@ public interface IDao<T extends Entity> {
     List<T> getAll() throws SQLException;
     T getById(int id) throws SQLException;
     void delete(int id) throws SQLException;
-
+    int getMaxId() throws SQLException;
     //void update(T entity) throws SQLException;
 }

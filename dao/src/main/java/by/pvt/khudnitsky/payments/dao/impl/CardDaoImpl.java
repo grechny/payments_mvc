@@ -49,6 +49,11 @@ public class CardDaoImpl extends AbstractDao<Card> {
         return list;
     }
 
+    @Override
+    public int getMaxId() throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
 	    @Override
     public void add(Card entity) throws SQLException {
         throw new UnsupportedOperationException();

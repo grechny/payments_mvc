@@ -8,6 +8,7 @@ import by.pvt.khudnitsky.payments.dao.IDao;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.constants.ColumnNames;
 import by.pvt.khudnitsky.payments.constants.SqlRequests;
+import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 import java.sql.Connection;
@@ -52,11 +53,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         ResultSet result = statement.executeQuery();
         List<Account> list = new ArrayList<>();
         while(result.next()){
-            Account account = new Account();
-            account.setAmount(result.getDouble(ColumnNames.ACCOUNT_AMOUNT));
-            account.setId(result.getInt(ColumnNames.ACCOUNT_ID));
-            account.setCurrency(result.getString(ColumnNames.ACCOUNT_CURRENCY));
-            account.setStatus(result.getInt(ColumnNames.ACCOUNT_STATUS));
+            Account account = buildAccount(result);
             list.add(account);
         }
         return list;
@@ -70,11 +67,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         ResultSet result = statement.executeQuery();
         Account account = null;
         while(result.next()){
-            account = new Account();
-            account.setAmount(result.getDouble(ColumnNames.ACCOUNT_AMOUNT));
-            account.setId(result.getInt(ColumnNames.ACCOUNT_ID));
-            account.setCurrency(result.getString(ColumnNames.ACCOUNT_CURRENCY));
-            account.setStatus(result.getInt(ColumnNames.ACCOUNT_STATUS));
+            account = buildAccount(result);
         }
         return account;
     }
@@ -99,14 +92,22 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         ResultSet result = statement.executeQuery();
         List<Account> list = new ArrayList<>();
         while(result.next()){
-            Account account = new Account();
-            account.setId(result.getInt(ColumnNames.ACCOUNT_ID));
-            account.setAmount(result.getDouble(ColumnNames.ACCOUNT_AMOUNT));
-            account.setCurrency(result.getString(ColumnNames.ACCOUNT_CURRENCY));
-            account.setStatus(result.getInt(ColumnNames.ACCOUNT_STATUS));
+            Account account = buildAccount(result);
             list.add(account);
         }
         return list;
+    }
+
+    @Override
+    public int getMaxId() throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_LAST_ACCOUNT_ID);
+        ResultSet result = statement.executeQuery();
+        int lastId = -1;
+        while(result.next()){
+            lastId = result.getInt(1);
+        }
+        return lastId;
     }
 
     public void updateAmount(double amount, int id) throws SQLException{
@@ -131,5 +132,14 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         PreparedStatement statement = connection.prepareStatement(SqlRequests.DELETE_ACCOUNT_BY_ID);
         statement.setInt(1, id);
         statement.executeUpdate();
+    }
+
+    private Account buildAccount(ResultSet result) throws SQLException{
+        int id = result.getInt(ColumnNames.ACCOUNT_ID);
+        String currency = result.getString(ColumnNames.ACCOUNT_CURRENCY);
+        double amount = result.getDouble(ColumnNames.ACCOUNT_AMOUNT);
+        int status = result.getInt(ColumnNames.ACCOUNT_STATUS);
+        Account account = EntityBuilder.buildAccount(id, currency, amount, status);
+        return account;
     }
 }

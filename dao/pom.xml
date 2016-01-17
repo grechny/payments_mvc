@@ -28,8 +28,12 @@
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
-            <artifactId>com.mysql.jdbc_5.1.5</artifactId>
+            <artifactId>mysql-connector-java</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
         </dependency>
     </dependencies>
 

@@ -10,7 +10,7 @@ package by.pvt.khudnitsky.payments.constants;
  */
 public class ConfigsConstants {
 
-    public static final String DATABASE_SOURCE = "java:/comp/env/jdbc/payments";
+    public static final String DATABASE_SOURCE = "database";
     public static final String CONFIGS_SOURCE = "configs";
     //public static final String LOGGER_CONFIG = "log4j";
     public static final String MESSAGES_SOURCE = "messages";

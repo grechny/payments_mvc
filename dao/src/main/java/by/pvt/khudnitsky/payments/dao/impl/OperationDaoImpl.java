@@ -34,25 +34,6 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     }
 
     @Override
-    public List<Operation> getAll() throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_OPERATIONS);
-        ResultSet result = statement.executeQuery();
-        List<Operation> list = new ArrayList<>();
-        while(result.next()){
-            Operation operation = new Operation();
-            operation.setId(result.getInt(ColumnNames.OPERATION_ID));
-            operation.setUserId(result.getInt(ColumnNames.USER_ID));
-            operation.setAccountId(result.getInt(ColumnNames.ACCOUNT_ID));
-            operation.setDescription(result.getString(ColumnNames.OPERATION_DESCRIPTION));
-            operation.setAmount(result.getDouble(ColumnNames.OPERATION_AMOUNT));
-            operation.setDate(result.getString(ColumnNames.OPERATION_DATE));
-            list.add(operation);
-        }
-        return list;
-    }
-
-    @Override
     public void add(Operation entity) throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(SqlRequests.CREATE_OPERATION);
@@ -64,13 +45,60 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     }
 
     @Override
-    public Operation getById(int id) throws SQLException {
-        throw new UnsupportedOperationException();
+    public List<Operation> getAll() throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_OPERATIONS);
+        ResultSet result = statement.executeQuery();
+        List<Operation> list = new ArrayList<>();
+        while(result.next()){
+            Operation operation = buildOperation(result);
+            list.add(operation);
+        }
+        return list;
     }
 
     @Override
-    public void delete(int id) throws SQLException {
-        throw new UnsupportedOperationException();
+    public Operation getById(int id) throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_OPERATION_BY_ID);
+        statement.setInt(1, id);
+        ResultSet result = statement.executeQuery();
+        Operation operation = null;
+        while(result.next()){
+            operation = buildOperation(result);
+        }
+        return operation;
+    }
+
+    @Override
+    public int getMaxId() throws SQLException {
+        Connection connection = PoolManager.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_LAST_OPERATION_ID);
+        ResultSet result = statement.executeQuery();
+        int lastId = -1;
+        while(result.next()){
+            lastId = result.getInt(1);
+        }
+        return lastId;
+    }
+
+    @Override
+    public void delete(int id)throws SQLException{
+        Connection connection = PoolManager.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SqlRequests.DELETE_OPERATION_BY_ID);
+        statement.setInt(1, id);
+        statement.executeUpdate();
+    }
+
+    private Operation buildOperation(ResultSet result) throws SQLException{
+        int id = result.getInt(ColumnNames.OPERATION_ID);
+        int accountId = result.getInt(ColumnNames.ACCOUNT_ID);
+        int userId = result.getInt(ColumnNames.USER_ID);
+        double amount = result.getDouble(ColumnNames.OPERATION_AMOUNT);
+        String description = result.getString(ColumnNames.OPERATION_DESCRIPTION);
+        String date = result.getString(ColumnNames.OPERATION_DATE);
+        Operation operation = EntityBuilder.buildOperation(id, userId, accountId, amount, description, date);
+        return operation;
     }
 }
 
