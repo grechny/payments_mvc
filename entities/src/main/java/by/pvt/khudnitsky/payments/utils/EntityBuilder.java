@@ -1,6 +1,5 @@
-package by.pvt.khudnitsky.payments.dao.impl;
+package by.pvt.khudnitsky.payments.utils;
 
-import by.pvt.khudnitsky.payments.constants.ColumnNames;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.Card;
 import by.pvt.khudnitsky.payments.entities.Operation;
