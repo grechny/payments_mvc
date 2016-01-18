@@ -51,8 +51,8 @@ public class AccountDaoImplTest {
         expected.setAmount(expected.getAmount() + adding);
         AccountDaoImpl.getInstance().updateAmount(adding, expected.getId());
         Account actual = AccountDaoImpl.getInstance().getById(expected.getId());
-        Assert.assertEquals(expected, actual);
         AccountDaoImpl.getInstance().delete(expected.getId());
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
