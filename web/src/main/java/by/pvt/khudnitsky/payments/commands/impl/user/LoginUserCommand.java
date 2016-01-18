@@ -11,8 +11,8 @@ import javax.servlet.http.HttpSession;
 import by.pvt.khudnitsky.payments.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.constants.*;
 import by.pvt.khudnitsky.payments.entities.User;
-import by.pvt.khudnitsky.payments.managers.ConfigurationManagerImpl;
-import by.pvt.khudnitsky.payments.managers.MessageManagerImpl;
+import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
+import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.UserServiceImpl;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 
@@ -36,21 +36,21 @@ public class LoginUserCommand extends AbstractCommand {
                 session.setAttribute(Parameters.USER, user);
                 session.setAttribute(Parameters.USERTYPE, userType);
                 if(UserType.CLIENT.equals(userType)){
-                    page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.CLIENT_PAGE_PATH);
+                    page = ConfigurationManager.getInstance().getProperty(PagePath.CLIENT_PAGE_PATH);
                 }
                 else{
-                    page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.ADMIN_PAGE_PATH);
+                    page = ConfigurationManager.getInstance().getProperty(PagePath.ADMIN_PAGE_PATH);
                 }
             }
             else{
-                page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
-                request.setAttribute(Parameters.ERROR_LOGIN_OR_PASSWORD, MessageManagerImpl.getInstance().getProperty(MessageConstants.WRONG_LOGIN_OR_PASSWORD));
+                page = ConfigurationManager.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
+                request.setAttribute(Parameters.ERROR_LOGIN_OR_PASSWORD, MessageManager.getInstance().getProperty(MessageConstants.WRONG_LOGIN_OR_PASSWORD));
             }
         }
         catch (SQLException e) {
             PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
-            page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
-            request.setAttribute(Parameters.ERROR_DATABASE, MessageManagerImpl.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+            page = ConfigurationManager.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
+            request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
         }
         return page;
     }

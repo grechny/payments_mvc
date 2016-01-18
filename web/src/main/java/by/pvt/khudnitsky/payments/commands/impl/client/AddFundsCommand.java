@@ -12,8 +12,8 @@ import by.pvt.khudnitsky.payments.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.commands.factory.CommandType;
 import by.pvt.khudnitsky.payments.constants.*;
 import by.pvt.khudnitsky.payments.entities.User;
-import by.pvt.khudnitsky.payments.managers.ConfigurationManagerImpl;
-import by.pvt.khudnitsky.payments.managers.MessageManagerImpl;
+import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
+import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.AccountServiceImpl;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 
@@ -40,28 +40,28 @@ public class AddFundsCommand extends AbstractCommand {
                         CommandType type = CommandType.valueOf(commandName.toUpperCase());
                         String description = type.getValue();
                         AccountServiceImpl.getInstance().addFunds(user, description, amount);
-                        request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManagerImpl.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));
-                        page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.CLIENT_ADDFUNDS_PAGE_PATH);
+                        request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));
+                        page = ConfigurationManager.getInstance().getProperty(PagePath.CLIENT_ADDFUNDS_PAGE_PATH);
                     } else {
-                        request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManagerImpl.getInstance().getProperty(MessageConstants.NEGATIVE_ARGUMENT));
-                        page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.CLIENT_ADDFUNDS_PAGE_PATH);
+                        request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.NEGATIVE_ARGUMENT));
+                        page = ConfigurationManager.getInstance().getProperty(PagePath.CLIENT_ADDFUNDS_PAGE_PATH);
                     }
                 } else {
-                    page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.CLIENT_BLOCK_PAGE_PATH);
+                    page = ConfigurationManager.getInstance().getProperty(PagePath.CLIENT_BLOCK_PAGE_PATH);
                 }
             } catch (SQLException e) {
                 PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
-                page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
-                request.setAttribute(Parameters.ERROR_DATABASE, MessageManagerImpl.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+                page = ConfigurationManager.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
+                request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
             } catch (NumberFormatException e) {
                 PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
-                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManagerImpl.getInstance().getProperty(MessageConstants.INVALID_NUMBER_FORMAT));
-                page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.CLIENT_ADDFUNDS_PAGE_PATH);
+                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_NUMBER_FORMAT));
+                page = ConfigurationManager.getInstance().getProperty(PagePath.CLIENT_ADDFUNDS_PAGE_PATH);
 
             }
         }
         else{
-            page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
+            page = ConfigurationManager.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
             session.invalidate();
         }
         return page;

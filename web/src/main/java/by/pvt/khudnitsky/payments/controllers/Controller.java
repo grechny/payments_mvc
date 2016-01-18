@@ -13,9 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import by.pvt.khudnitsky.payments.commands.factory.CommandFactory;
 import by.pvt.khudnitsky.payments.commands.ICommand;
-import by.pvt.khudnitsky.payments.constants.ConfigConstant;
 import by.pvt.khudnitsky.payments.constants.PagePath;
-import by.pvt.khudnitsky.payments.managers.ConfigurationManagerImpl;
+import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 
 /**
  * @author khudnitsky
@@ -32,7 +31,7 @@ public class Controller extends HttpServlet{
             dispatcher.forward(request, response);
         }
         else{
-            page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
+            page = ConfigurationManager.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
             response.sendRedirect(request.getContextPath() + page);
         }
     }

@@ -12,20 +12,19 @@ import by.pvt.khudnitsky.payments.constants.ConfigConstant;
  * @version 1.0
  *
  */
-public class MessageManagerImpl implements IManager {
+public class MessageManager {
     private final ResourceBundle bundle = ResourceBundle.getBundle(ConfigConstant.MESSAGES_SOURCE);
-    private static MessageManagerImpl instance;
+    private static MessageManager instance;
 
-    private MessageManagerImpl(){}
+    private MessageManager(){}
 
-    public static synchronized MessageManagerImpl getInstance(){
+    public static synchronized MessageManager getInstance(){
         if(instance == null){
-            instance = new MessageManagerImpl();
+            instance = new MessageManager();
         }
         return instance;
     }
 
-    @Override
     public String getProperty(String key) {
         return bundle.getString(key);
     }

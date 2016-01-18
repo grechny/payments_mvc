@@ -12,12 +12,11 @@ import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.services.impl.UserServiceImpl;
 import by.pvt.khudnitsky.payments.commands.AbstractCommand;
-import by.pvt.khudnitsky.payments.constants.ConfigConstant;
 import by.pvt.khudnitsky.payments.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.constants.Parameters;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
-import by.pvt.khudnitsky.payments.managers.ConfigurationManagerImpl;
-import by.pvt.khudnitsky.payments.managers.MessageManagerImpl;
+import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
+import by.pvt.khudnitsky.payments.managers.MessageManager;
 
 /**
  * @author khudnitsky
@@ -52,33 +51,33 @@ public class RegistrationCommand extends AbstractCommand {
             if(areFieldsFullStocked()){
                 if(UserServiceImpl.getInstance().checkIsNewUser(user)){
                     UserServiceImpl.getInstance().registrateUser(user, account);
-                    page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
-                    request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManagerImpl.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));
+                    page = ConfigurationManager.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));
                 }
                 else{
-                    page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
-                    request.setAttribute(Parameters.ERROR_USER_EXSISTS, MessageManagerImpl.getInstance().getProperty(MessageConstants.USER_EXSISTS));
+                    page = ConfigurationManager.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
+                    request.setAttribute(Parameters.ERROR_USER_EXSISTS, MessageManager.getInstance().getProperty(MessageConstants.USER_EXSISTS));
                 }
             }
             else{
-                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManagerImpl.getInstance().getProperty(MessageConstants.EMPTY_FIELDS));
-                page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
+                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.EMPTY_FIELDS));
+                page = ConfigurationManager.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
             }
         }
         catch (SQLException e) {
             PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
-            page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
-            request.setAttribute(Parameters.ERROR_DATABASE, MessageManagerImpl.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+            page = ConfigurationManager.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
+            request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
         }
         catch (NumberFormatException e) {
             PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
-            request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManagerImpl.getInstance().getProperty(MessageConstants.INVALID_NUMBER_FORMAT));
-            page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
+            request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_NUMBER_FORMAT));
+            page = ConfigurationManager.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
         }
         // TODO исправить проверку на null
         catch(NullPointerException e){
             PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
-            page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
+            page = ConfigurationManager.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
         }
         return page;
     }

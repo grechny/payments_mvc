@@ -14,8 +14,8 @@ import by.pvt.khudnitsky.payments.constants.*;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.services.impl.AccountServiceImpl;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
-import by.pvt.khudnitsky.payments.managers.ConfigurationManagerImpl;
-import by.pvt.khudnitsky.payments.managers.MessageManagerImpl;
+import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
+import by.pvt.khudnitsky.payments.managers.MessageManager;
 
 /**
  * @author khudnitsky
@@ -36,25 +36,25 @@ public class UnblockCommand extends AbstractCommand {
                     AccountServiceImpl.getInstance().updateAccountStatus(aid, AccountStatus.UNBLOCKED);
                     List<Account> list = AccountServiceImpl.getInstance().getBlockedAccounts();
                     session.setAttribute(Parameters.ACCOUNTS_LIST, list);
-                    page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.ADMIN_UNBLOCK_PAGE);
+                    page = ConfigurationManager.getInstance().getProperty(PagePath.ADMIN_UNBLOCK_PAGE);
                 }
                 catch (SQLException e) {
                     PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
-                    page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
-                    request.setAttribute(Parameters.ERROR_DATABASE, MessageManagerImpl.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+                    page = ConfigurationManager.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
+                    request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
                 }
             }
             else if(!((List)session.getAttribute(Parameters.ACCOUNTS_LIST)).isEmpty()){
-                request.setAttribute(Parameters.ERROR_EMPTY_CHOICE, MessageManagerImpl.getInstance().getProperty(MessageConstants.EMPTY_CHOICE));
-                page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.ADMIN_UNBLOCK_PAGE);
+                request.setAttribute(Parameters.ERROR_EMPTY_CHOICE, MessageManager.getInstance().getProperty(MessageConstants.EMPTY_CHOICE));
+                page = ConfigurationManager.getInstance().getProperty(PagePath.ADMIN_UNBLOCK_PAGE);
             }
             else{
-                request.setAttribute(Parameters.ERROR_EMPTY_LIST, MessageManagerImpl.getInstance().getProperty(MessageConstants.EMPTY_LIST));
-                page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.ADMIN_UNBLOCK_PAGE);
+                request.setAttribute(Parameters.ERROR_EMPTY_LIST, MessageManager.getInstance().getProperty(MessageConstants.EMPTY_LIST));
+                page = ConfigurationManager.getInstance().getProperty(PagePath.ADMIN_UNBLOCK_PAGE);
             }
         }
         else{
-            page = ConfigurationManagerImpl.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
+            page = ConfigurationManager.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
             session.invalidate();
         }
         return page;

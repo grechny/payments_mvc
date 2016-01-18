@@ -12,20 +12,19 @@ import by.pvt.khudnitsky.payments.constants.ConfigConstant;
  * @version 1.0
  *
  */
-public class ConfigurationManagerImpl implements IManager {
+public class ConfigurationManager {
     private final ResourceBundle bundle = ResourceBundle.getBundle(ConfigConstant.CONFIGS_SOURCE);
-    private static ConfigurationManagerImpl instance;
+    private static ConfigurationManager instance;
 
-    private ConfigurationManagerImpl(){}
+    private ConfigurationManager(){}
 
-    public static synchronized ConfigurationManagerImpl getInstance(){
+    public static synchronized ConfigurationManager getInstance(){
         if(instance == null){
-            instance = new ConfigurationManagerImpl();
+            instance = new ConfigurationManager();
         }
         return instance;
     }
 
-    @Override
     public String getProperty(String key){
         return bundle.getString(key);
     }

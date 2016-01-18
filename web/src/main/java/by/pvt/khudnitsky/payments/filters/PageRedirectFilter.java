@@ -3,9 +3,8 @@
  */
 package by.pvt.khudnitsky.payments.filters;
 
-import by.pvt.khudnitsky.payments.constants.ConfigConstant;
 import by.pvt.khudnitsky.payments.constants.PagePath;
-import by.pvt.khudnitsky.payments.managers.ConfigurationManagerImpl;
+import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 
 import java.io.IOException;
 
@@ -34,7 +33,7 @@ public class PageRedirectFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         // переход на стартовую страницу
-        httpResponse.sendRedirect(httpRequest.getContextPath() + ConfigurationManagerImpl.getInstance().getProperty(PagePath.INDEX_PAGE_PATH));
+        httpResponse.sendRedirect(httpRequest.getContextPath() + ConfigurationManager.getInstance().getProperty(PagePath.INDEX_PAGE_PATH));
         chain.doFilter(request, response);
     }
 
