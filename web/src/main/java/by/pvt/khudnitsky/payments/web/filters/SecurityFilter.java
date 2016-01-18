@@ -6,6 +6,9 @@ package by.pvt.khudnitsky.payments.web.filters;
 import by.pvt.khudnitsky.payments.constants.UserType;
 import by.pvt.khudnitsky.payments.constants.ConfigsConstants;
 import by.pvt.khudnitsky.payments.utils.managers.ConfigurationManagerImpl;
+import by.pvt.khudnitsky.payments.web.commands.ICommand;
+import by.pvt.khudnitsky.payments.web.commands.factory.CommandFactory;
+import by.pvt.khudnitsky.payments.web.commands.user.LoginUserCommand;
 
 import java.io.IOException;
 import javax.servlet.Filter;
@@ -26,15 +29,19 @@ public class SecurityFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession();
-
+        CommandFactory commandFactory = CommandFactory.getInstance();
+        ICommand сommand = commandFactory.defineCommand(httpRequest);
         UserType type = (UserType) session.getAttribute("userType");
         if (type == null) {
-          RequestDispatcher dispatcher = request.getRequestDispatcher(ConfigurationManagerImpl.getInstance().getProperty(ConfigsConstants.INDEX_PAGE_PATH));
-          dispatcher.forward(httpRequest, httpResponse);
-          return;
+            String page = сommand.execute(httpRequest);
+            RequestDispatcher dispatcher = request.getRequestDispatcher(page);
+            dispatcher.forward(httpRequest, httpResponse);
+            return;
         }
         chain.doFilter(request, response);
     }
 
     public void destroy() {}
+
+
 }
