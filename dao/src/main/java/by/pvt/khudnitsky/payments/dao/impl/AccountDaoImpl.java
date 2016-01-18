@@ -5,8 +5,8 @@ package by.pvt.khudnitsky.payments.dao.impl;
 
 import by.pvt.khudnitsky.payments.dao.AbstractDao;
 import by.pvt.khudnitsky.payments.entities.Account;
-import by.pvt.khudnitsky.payments.constants.ColumnNames;
-import by.pvt.khudnitsky.payments.constants.SqlRequests;
+import by.pvt.khudnitsky.payments.constants.ColumnName;
+import by.pvt.khudnitsky.payments.constants.SqlRequest;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 import by.pvt.khudnitsky.payments.utils.EntityBuilder;
 
@@ -37,7 +37,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     @Override
     public void add(Account account) throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.ADD_ACCOUNT_WITH_ID);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.ADD_ACCOUNT_WITH_ID);
         statement.setInt(1, account.getId());
         statement.setDouble(2, account.getAmount());
         statement.setString(3, account.getCurrency());
@@ -48,7 +48,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     @Override
     public List<Account> getAll() throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_ACCOUNTS);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_ALL_ACCOUNTS);
         ResultSet result = statement.executeQuery();
         List<Account> list = new ArrayList<>();
         while(result.next()){
@@ -61,7 +61,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     @Override
     public Account getById(int id) throws SQLException{
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ACCOUNT_BY_ID);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_ACCOUNT_BY_ID);
         statement.setInt(1, id);
         ResultSet result = statement.executeQuery();
         Account account = null;
@@ -74,7 +74,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     public boolean isAccountStatusBlocked(int id) throws SQLException{
         Connection connection = PoolManager.getInstance().getConnection();
         boolean isBlocked = false;
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.CHECK_ACCOUNT_STATUS);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.CHECK_ACCOUNT_STATUS);
         statement.setDouble(1, id);
         ResultSet result = statement.executeQuery();
         while(result.next()){
@@ -87,7 +87,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
 
     public List<Account> getBlockedAccounts() throws SQLException{
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_BLOCKED_ACCOUNTS);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_BLOCKED_ACCOUNTS);
         ResultSet result = statement.executeQuery();
         List<Account> list = new ArrayList<>();
         while(result.next()){
@@ -100,7 +100,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     @Override
     public int getMaxId() throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_LAST_ACCOUNT_ID);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_LAST_ACCOUNT_ID);
         ResultSet result = statement.executeQuery();
         int lastId = -1;
         while(result.next()){
@@ -111,7 +111,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
 
     public void updateAmount(double amount, int id) throws SQLException{
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.MAKE_ACCOUNT_OPERATION);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.MAKE_ACCOUNT_OPERATION);
         statement.setDouble(1, amount);
         statement.setInt(2, id);
         statement.executeUpdate();
@@ -119,7 +119,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
 
     public void updateAccountStatus(int id, int status) throws SQLException{
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.CHANGE_STATUS);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.CHANGE_STATUS);
         statement.setInt(1, status);
         statement.setInt(2, id);
         statement.executeUpdate();
@@ -128,16 +128,16 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     @Override
     public void delete(int id)throws SQLException{
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.DELETE_ACCOUNT_BY_ID);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.DELETE_ACCOUNT_BY_ID);
         statement.setInt(1, id);
         statement.executeUpdate();
     }
 
     private Account buildAccount(ResultSet result) throws SQLException{
-        int id = result.getInt(ColumnNames.ACCOUNT_ID);
-        String currency = result.getString(ColumnNames.ACCOUNT_CURRENCY);
-        double amount = result.getDouble(ColumnNames.ACCOUNT_AMOUNT);
-        int status = result.getInt(ColumnNames.ACCOUNT_STATUS);
+        int id = result.getInt(ColumnName.ACCOUNT_ID);
+        String currency = result.getString(ColumnName.ACCOUNT_CURRENCY);
+        double amount = result.getDouble(ColumnName.ACCOUNT_AMOUNT);
+        int status = result.getInt(ColumnName.ACCOUNT_STATUS);
         Account account = EntityBuilder.buildAccount(id, currency, amount, status);
         return account;
     }

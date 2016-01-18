@@ -12,8 +12,8 @@ import java.util.List;
 
 import by.pvt.khudnitsky.payments.dao.AbstractDao;
 import by.pvt.khudnitsky.payments.entities.Operation;
-import by.pvt.khudnitsky.payments.constants.ColumnNames;
-import by.pvt.khudnitsky.payments.constants.SqlRequests;
+import by.pvt.khudnitsky.payments.constants.ColumnName;
+import by.pvt.khudnitsky.payments.constants.SqlRequest;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 import by.pvt.khudnitsky.payments.utils.EntityBuilder;
 
@@ -37,7 +37,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     @Override
     public void add(Operation entity) throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.CREATE_OPERATION);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.CREATE_OPERATION);
         statement.setInt(1, entity.getUserId());
         statement.setInt(2, entity.getAccountId());
         statement.setDouble(3, entity.getAmount());
@@ -48,7 +48,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     @Override
     public List<Operation> getAll() throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_OPERATIONS);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_ALL_OPERATIONS);
         ResultSet result = statement.executeQuery();
         List<Operation> list = new ArrayList<>();
         while(result.next()){
@@ -61,7 +61,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     @Override
     public Operation getById(int id) throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_OPERATION_BY_ID);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_OPERATION_BY_ID);
         statement.setInt(1, id);
         ResultSet result = statement.executeQuery();
         Operation operation = null;
@@ -74,7 +74,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     @Override
     public int getMaxId() throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_LAST_OPERATION_ID);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_LAST_OPERATION_ID);
         ResultSet result = statement.executeQuery();
         int lastId = -1;
         while(result.next()){
@@ -86,18 +86,18 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     @Override
     public void delete(int id)throws SQLException{
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.DELETE_OPERATION_BY_ID);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.DELETE_OPERATION_BY_ID);
         statement.setInt(1, id);
         statement.executeUpdate();
     }
 
     private Operation buildOperation(ResultSet result) throws SQLException{
-        int id = result.getInt(ColumnNames.OPERATION_ID);
-        int accountId = result.getInt(ColumnNames.ACCOUNT_ID);
-        int userId = result.getInt(ColumnNames.USER_ID);
-        double amount = result.getDouble(ColumnNames.OPERATION_AMOUNT);
-        String description = result.getString(ColumnNames.OPERATION_DESCRIPTION);
-        String date = result.getString(ColumnNames.OPERATION_DATE);
+        int id = result.getInt(ColumnName.OPERATION_ID);
+        int accountId = result.getInt(ColumnName.ACCOUNT_ID);
+        int userId = result.getInt(ColumnName.USER_ID);
+        double amount = result.getDouble(ColumnName.OPERATION_AMOUNT);
+        String description = result.getString(ColumnName.OPERATION_DESCRIPTION);
+        String date = result.getString(ColumnName.OPERATION_DATE);
         Operation operation = EntityBuilder.buildOperation(id, userId, accountId, amount, description, date);
         return operation;
     }

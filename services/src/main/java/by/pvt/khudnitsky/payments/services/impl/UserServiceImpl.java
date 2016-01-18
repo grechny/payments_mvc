@@ -1,6 +1,6 @@
 package by.pvt.khudnitsky.payments.services.impl;
 
-import by.pvt.khudnitsky.payments.constants.AccessLevels;
+import by.pvt.khudnitsky.payments.constants.AccessLevel;
 import by.pvt.khudnitsky.payments.constants.UserType;
 import by.pvt.khudnitsky.payments.dao.impl.AccountDaoImpl;
 import by.pvt.khudnitsky.payments.dao.impl.UserDaoImpl;
@@ -127,7 +127,7 @@ public class UserServiceImpl extends AbstractService<User> {
 
     public UserType checkAccessLevel(User user) throws SQLException{
         UserType userType;
-        if(AccessLevels.CLIENT == user.getAccessLevel()){
+        if(AccessLevel.CLIENT == user.getAccessLevel()){
             userType = UserType.CLIENT;
         }
         else{

@@ -12,8 +12,8 @@ import java.util.List;
 
 import by.pvt.khudnitsky.payments.dao.AbstractDao;
 import by.pvt.khudnitsky.payments.entities.Card;
-import by.pvt.khudnitsky.payments.constants.ColumnNames;
-import by.pvt.khudnitsky.payments.constants.SqlRequests;
+import by.pvt.khudnitsky.payments.constants.ColumnName;
+import by.pvt.khudnitsky.payments.constants.SqlRequest;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 
 /**
@@ -36,14 +36,14 @@ public class CardDaoImpl extends AbstractDao<Card> {
     @Override
     public List<Card> getAll() throws SQLException {
         Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequests.GET_ALL_CARDS);
+        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_ALL_CARDS);
         ResultSet result = statement.executeQuery();
         List<Card> list = new ArrayList<>();
         while(result.next()){
             Card card = new Card();
-            card.setId(result.getInt(ColumnNames.CARD_ID));
-            card.setAccountId(result.getInt(ColumnNames.ACCOUNT_ID));
-            card.setValidity(result.getString(ColumnNames.CARD_VALIDITY));
+            card.setId(result.getInt(ColumnName.CARD_ID));
+            card.setAccountId(result.getInt(ColumnName.ACCOUNT_ID));
+            card.setValidity(result.getString(ColumnName.CARD_VALIDITY));
             list.add(card);
         }
         return list;
