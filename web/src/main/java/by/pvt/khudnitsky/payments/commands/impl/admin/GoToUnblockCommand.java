@@ -15,6 +15,7 @@ import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.AccountServiceImpl;
+import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 
 /**
@@ -28,7 +29,7 @@ public class GoToUnblockCommand extends AbstractCommand {
     public String execute(HttpServletRequest request) {
         String page = null;
         HttpSession session = request.getSession();
-        UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
+        UserType userType = RequestParameterParser.getUserType(request);
         if(userType == UserType.ADMINISTRATOR){
             try {
                 List<Account> list = AccountServiceImpl.getInstance().getBlockedAccounts();

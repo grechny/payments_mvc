@@ -41,7 +41,7 @@
 				</tr>
 			</table>			 
 			${operationMessage} 
-			${errorUserExsists} <br />
+			${errorUserExists} <br />
 			<input type="submit" value="Зарегистрировать" />
 			<a href="controller?command=back">Вернуться обратно</a>
 		</form>

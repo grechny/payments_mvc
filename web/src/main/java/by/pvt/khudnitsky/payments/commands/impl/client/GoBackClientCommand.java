@@ -11,6 +11,7 @@ import by.pvt.khudnitsky.payments.constants.UserType;
 import by.pvt.khudnitsky.payments.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.constants.Parameters;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
+import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
 
 /**
  * @author khudnitsky
@@ -23,7 +24,7 @@ public class GoBackClientCommand extends AbstractCommand {
     public String execute(HttpServletRequest request) {
         String page = null;
         HttpSession session = request.getSession();
-        UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
+        UserType userType = RequestParameterParser.getUserType(request);
         if(userType == UserType.CLIENT){
             page = ConfigurationManager.getInstance().getProperty(PagePath.CLIENT_PAGE_PATH);
         }

@@ -14,6 +14,7 @@ import by.pvt.khudnitsky.payments.constants.*;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.OperationServiceImpl;
+import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 
@@ -28,7 +29,7 @@ public class ShowOperationsCommand extends AbstractCommand {
     public String execute(HttpServletRequest request) {
         String page = null;
         HttpSession session = request.getSession();
-        UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
+        UserType userType = RequestParameterParser.getUserType(request);
         if(userType == UserType.ADMINISTRATOR){
             try{
                 List<Operation> list = OperationServiceImpl.getInstance().getAll();

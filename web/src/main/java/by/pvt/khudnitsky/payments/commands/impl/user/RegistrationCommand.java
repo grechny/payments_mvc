@@ -14,6 +14,7 @@ import by.pvt.khudnitsky.payments.services.impl.UserServiceImpl;
 import by.pvt.khudnitsky.payments.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.constants.Parameters;
+import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
@@ -24,30 +25,15 @@ import by.pvt.khudnitsky.payments.managers.MessageManager;
  *
  */
 public class RegistrationCommand extends AbstractCommand {
-    private static String firstName;
-    private static String lastName;
-    private static String login;
-    private static String password;
-    private static String accountIdString;
-    private static String currency;
+    private User user;
+    private Account account;
 
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
-        // TODO сделать RequestHandler
-        firstName = request.getParameter(Parameters.FIRST_NAME);
-        lastName = request.getParameter(Parameters.LAST_NAME);
-        login = request.getParameter(Parameters.LOGIN);
-        password = request.getParameter(Parameters.PASSWORD);
-        accountIdString = request.getParameter(Parameters.ACCOUNT_ID);
-        currency = request.getParameter(Parameters.CURRENCY);
-
-        int accountId = Integer.valueOf(accountIdString);
-
-        User user = buildUser(firstName, lastName, login, password, accountId);
-        Account account = buildAccount(accountId, currency);
-
         try{
+            user = RequestParameterParser.getUser(request);
+            account = RequestParameterParser.getAccount(request);
             if(areFieldsFullStocked()){
                 if(UserServiceImpl.getInstance().checkIsNewUser(user)){
                     UserServiceImpl.getInstance().registrateUser(user, account);
@@ -74,7 +60,7 @@ public class RegistrationCommand extends AbstractCommand {
             request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_NUMBER_FORMAT));
             page = ConfigurationManager.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
         }
-        // TODO исправить проверку на null
+        // TODO исправить
         catch(NullPointerException e){
             PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
             page = ConfigurationManager.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
@@ -82,31 +68,16 @@ public class RegistrationCommand extends AbstractCommand {
         return page;
     }
 
-
-    //TODO Вынести куда-нибудь
+    // TODO javascript???
     private boolean areFieldsFullStocked(){
         boolean isFullStocked = false;
-        if(!firstName.isEmpty() & !lastName.isEmpty() & !login.isEmpty() & !password.isEmpty() & !accountIdString.isEmpty()){
+        if(!user.getFirstName().isEmpty()
+                & !user.getLastName().isEmpty()
+                & !user.getLogin().isEmpty()
+                & !user.getPassword().isEmpty()
+                & user.getAccountId()!= 0){
             isFullStocked = true;
         }
         return isFullStocked;
-    }
-
-    // TODO вынести методы на слой сервисов, и создать билдеры
-    private User buildUser(String firstName, String lastName, String login, String password, int accountId){
-        User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setAccountId(accountId);
-        return user;
-    }
-
-    private Account buildAccount(int accountId, String currency){
-        Account account = new Account();
-        account.setId(accountId);
-        account.setCurrency(currency);
-        return account;
     }
 }

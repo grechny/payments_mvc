@@ -15,6 +15,7 @@ import by.pvt.khudnitsky.payments.commands.factory.CommandFactory;
 import by.pvt.khudnitsky.payments.commands.ICommand;
 import by.pvt.khudnitsky.payments.constants.PagePath;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
+import by.pvt.khudnitsky.payments.utils.RequestHandler;
 
 /**
  * @author khudnitsky
@@ -22,27 +23,13 @@ import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
  *
  */
 public class Controller extends HttpServlet{
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        CommandFactory commandFactory = CommandFactory.getInstance();
-        ICommand сommand = commandFactory.defineCommand(request);
-        String page = сommand.execute(request);
-        if(page != null){
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-            dispatcher.forward(request, response);
-        }
-        else{
-            page = ConfigurationManager.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
-            response.sendRedirect(request.getContextPath() + page);
-        }
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response);
+        RequestHandler.processRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response);
+        RequestHandler.processRequest(request, response);
     }
 }

@@ -13,6 +13,7 @@ import by.pvt.khudnitsky.payments.constants.*;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.services.impl.UserServiceImpl;
 import by.pvt.khudnitsky.payments.commands.AbstractCommand;
+import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
@@ -28,7 +29,7 @@ public class ShowClientsCommand extends AbstractCommand{
     public String execute(HttpServletRequest request) {
         String page = null;
         HttpSession session = request.getSession();
-        UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
+        UserType userType = RequestParameterParser.getUserType(request);
         if(userType == UserType.ADMINISTRATOR){
             try{
                 List<User> list = UserServiceImpl.getInstance().getAll();
@@ -41,6 +42,7 @@ public class ShowClientsCommand extends AbstractCommand{
                 request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
             }
         }
+        // TODO ПРОВверить, возможно отработает фильтр
         else{
             page = ConfigurationManager.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
             session.invalidate();

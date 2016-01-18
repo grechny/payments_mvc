@@ -14,6 +14,7 @@ import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.AccountServiceImpl;
+import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 
@@ -23,18 +24,19 @@ import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
  *
  */
 public class BalanceCommand extends AbstractCommand {
+    private User user;
 
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
         HttpSession session = request.getSession();
-        UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
+        UserType userType = RequestParameterParser.getUserType(request);
         if(userType == UserType.CLIENT){
-            User user = (User)session.getAttribute(Parameters.USER);
+            user = RequestParameterParser.getRecordUser(request);
             try {
                 Account account = AccountServiceImpl.getInstance().getById(user.getAccountId());
-                request.setAttribute(Parameters.BALANCE, account.getAmount());
-                request.setAttribute(Parameters.CURRENCY, account.getCurrency());
+                request.setAttribute(Parameters.OPERATION_BALANCE, account.getAmount());
+                request.setAttribute(Parameters.ACCOUNT_CURRENCY, account.getCurrency());
                 page = ConfigurationManager.getInstance().getProperty(PagePath.CLIENT_BALANCE_PAGE_PATH);
             }
             catch (SQLException e) {

@@ -14,6 +14,7 @@ import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.UserServiceImpl;
+import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 
 /**
@@ -22,16 +23,16 @@ import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
  *
  */
 public class LoginUserCommand extends AbstractCommand {
+    private User user;
 
     @Override
     public String execute(HttpServletRequest request) {
-        String login = request.getParameter(Parameters.LOGIN);
-        String password = request.getParameter(Parameters.PASSWORD);
-        HttpSession session = request.getSession();
         String page = null;
+        HttpSession session = request.getSession();
         try {
-            if(UserServiceImpl.getInstance().checkUserAuthorization(login, password)){
-                User user = UserServiceImpl.getInstance().getUserByLogin(login);
+            user = RequestParameterParser.getUser(request);
+            if(UserServiceImpl.getInstance().checkUserAuthorization(user.getLogin(), user.getPassword())){
+                user = UserServiceImpl.getInstance().getUserByLogin(user.getLogin());
                 UserType userType = UserServiceImpl.getInstance().checkAccessLevel(user);
                 session.setAttribute(Parameters.USER, user);
                 session.setAttribute(Parameters.USERTYPE, userType);
