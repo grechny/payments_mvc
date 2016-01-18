@@ -2,7 +2,7 @@ package by.pvt.khudnitsky.payments.services.impl;
 
 import by.pvt.khudnitsky.payments.constants.AccountStatus;
 import by.pvt.khudnitsky.payments.dao.impl.AccountDaoImpl;
-import by.pvt.khudnitsky.payments.dao.impl.EntityBuilder;
+import by.pvt.khudnitsky.payments.utils.EntityBuilder;
 import by.pvt.khudnitsky.payments.dao.impl.UserDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.Operation;

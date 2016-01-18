@@ -2,7 +2,7 @@ package by.pvt.khudnitsky.payments.services.impl;
 
 import by.pvt.khudnitsky.payments.constants.UserType;
 import by.pvt.khudnitsky.payments.dao.impl.AccountDaoImpl;
-import by.pvt.khudnitsky.payments.dao.impl.EntityBuilder;
+import by.pvt.khudnitsky.payments.utils.EntityBuilder;
 import by.pvt.khudnitsky.payments.dao.impl.UserDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.Operation;
@@ -11,8 +11,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.

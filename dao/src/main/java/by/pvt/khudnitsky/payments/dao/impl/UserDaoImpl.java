@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.pvt.khudnitsky.payments.dao.AbstractDao;
-import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.constants.ColumnNames;
 import by.pvt.khudnitsky.payments.constants.SqlRequests;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
+import by.pvt.khudnitsky.payments.utils.EntityBuilder;
 
 /**
  * @author khudnitsky

@@ -1,10 +1,8 @@
 package by.pvt.khudnitsky.payments.dao.impl;
 
 import by.pvt.khudnitsky.payments.entities.Account;
-import by.pvt.khudnitsky.payments.managers.PoolManager;
+import by.pvt.khudnitsky.payments.utils.EntityBuilder;
 import org.junit.*;
-
-import java.sql.*;
 
 /**
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
