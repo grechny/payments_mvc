@@ -153,7 +153,7 @@ public class AccountServiceImpl extends AbstractService<Account> {
         connection.setAutoCommit(false);
         try {
             Operation operation = buildOperation(user, description, amount);
-            OperationServiceImpl.getInstance().add(operation);
+            OperationDaoImpl.getInstance().add(operation);
             AccountDaoImpl.getInstance().updateAmount(amount, user.getAccountId());
             connection.commit();
         }
@@ -169,7 +169,7 @@ public class AccountServiceImpl extends AbstractService<Account> {
         try {
             Operation operation = buildOperation(user, description, 0);
             OperationDaoImpl.getInstance().add(operation);
-            AccountDaoImpl.getInstance().updateAccountStatus(user.getId(), AccountStatus.BLOCKED);
+            AccountDaoImpl.getInstance().updateAccountStatus(user.getAccountId(), AccountStatus.BLOCKED);
             connection.commit();
         }
         catch (SQLException e){
