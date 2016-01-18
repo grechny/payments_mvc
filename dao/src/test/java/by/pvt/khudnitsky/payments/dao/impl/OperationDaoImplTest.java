@@ -36,10 +36,10 @@ public class OperationDaoImplTest {
         OperationDaoImpl.getInstance().add(expected);
         int operationActualId = OperationDaoImpl.getInstance().getMaxId();
         Operation actual = OperationDaoImpl.getInstance().getById(operationActualId);
-        Assert.assertEquals(expected.getDescription(), actual.getDescription());  // TODO исправить
         AccountDaoImpl.getInstance().delete(account.getId());
         UserDaoImpl.getInstance().delete(userActualId);
         OperationDaoImpl.getInstance().delete(operationActualId);
+        Assert.assertEquals(expected.getDescription(), actual.getDescription());  // TODO исправить
     }
 
     @Test
