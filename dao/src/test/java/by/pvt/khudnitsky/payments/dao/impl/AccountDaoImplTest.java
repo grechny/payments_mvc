@@ -10,6 +10,17 @@ import java.sql.*;
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
 public class AccountDaoImplTest {
+    private Account expected;
+
+    @Before
+    public void setUp(){
+        expected = EntityBuilder.buildAccount(100, "TEST", 100, 0);
+    }
+
+    @After
+    public void tearDown(){
+        expected = null;
+    }
 
     @Test
     public void testGetInstance() throws Exception {
@@ -20,7 +31,6 @@ public class AccountDaoImplTest {
 
     @Test
     public void testAdd() throws Exception{
-        Account expected = EntityBuilder.buildAccount(100, "TEST", 100, 0);
         AccountDaoImpl.getInstance().add(expected);
         Account actual = AccountDaoImpl.getInstance().getById(expected.getId());
         Assert.assertEquals(expected, actual);
@@ -29,14 +39,13 @@ public class AccountDaoImplTest {
 
     @Test
     public void testGetById() throws Exception {
-        Account expected = EntityBuilder.buildAccount(1, "ADMIN", 0, 0);
+        expected = EntityBuilder.buildAccount(1, "ADMIN", 0, 0);
         Account actual = AccountDaoImpl.getInstance().getById(expected.getId());
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void testUpdateAmount() throws Exception {
-        Account expected = EntityBuilder.buildAccount(100, "TEST", 100, 0);
         AccountDaoImpl.getInstance().add(expected);
         double adding = 100;
         expected.setAmount(expected.getAmount() + adding);
@@ -48,10 +57,9 @@ public class AccountDaoImplTest {
 
     @Test
     public void testDelete() throws Exception{
-        Account account = EntityBuilder.buildAccount(100, "TEST", 100, 0);
-        AccountDaoImpl.getInstance().add(account);
-        AccountDaoImpl.getInstance().delete(account.getId());
-        Account actual = AccountDaoImpl.getInstance().getById(account.getId());
+        AccountDaoImpl.getInstance().add(expected);
+        AccountDaoImpl.getInstance().delete(expected.getId());
+        Account actual = AccountDaoImpl.getInstance().getById(expected.getId());
         Assert.assertNull(actual);
     }
 }
