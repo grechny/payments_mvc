@@ -7,11 +7,11 @@ import by.pvt.khudnitsky.payments.dao.AbstractDao;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.constants.ColumnName;
 import by.pvt.khudnitsky.payments.constants.SqlRequest;
+import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
+import by.pvt.khudnitsky.payments.utils.ClosingUtil;
 import by.pvt.khudnitsky.payments.utils.EntityBuilder;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,102 +35,180 @@ public class AccountDaoImpl extends AbstractDao<Account> {
     }
 
     @Override
-    public void add(Account account) throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.ADD_ACCOUNT_WITH_ID);
-        statement.setInt(1, account.getId());
-        statement.setDouble(2, account.getAmount());
-        statement.setString(3, account.getCurrency());
-        statement.setInt(4, account.getStatus());
-        statement.executeUpdate();
+    public void add(Account account) throws DaoException {
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.ADD_ACCOUNT_WITH_ID);
+            statement.setInt(1, account.getId());
+            statement.setDouble(2, account.getAmount());
+            statement.setString(3, account.getCurrency());
+            statement.setInt(4, account.getStatus());
+            statement.executeUpdate();
+        }
+        catch (SQLException e){
+            throw new DaoException("Unable to add the account ", e);
+        }
+        finally{
+            ClosingUtil.close(statement);
+        }
     }
 
     @Override
-    public List<Account> getAll() throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_ALL_ACCOUNTS);
-        ResultSet result = statement.executeQuery();
+    public List<Account> getAll() throws DaoException {
         List<Account> list = new ArrayList<>();
-        while(result.next()){
-            Account account = buildAccount(result);
-            list.add(account);
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.GET_ALL_ACCOUNTS);
+            result = statement.executeQuery();
+            while (result.next()) {
+                Account account = buildAccount(result);
+                list.add(account);
+            }
+        }
+        catch (SQLException e){
+            throw new DaoException("Unable to return list of accounts ", e);
+        }
+        finally{
+            ClosingUtil.close(result);
+            ClosingUtil.close(statement);
         }
         return list;
     }
 
     @Override
-    public Account getById(int id) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_ACCOUNT_BY_ID);
-        statement.setInt(1, id);
-        ResultSet result = statement.executeQuery();
+    public Account getById(int id) throws DaoException{
         Account account = null;
-        while(result.next()){
-            account = buildAccount(result);
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.GET_ACCOUNT_BY_ID);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+
+            while (result.next()) {
+                account = buildAccount(result);
+            }
+        }
+        catch(SQLException e){
+            throw new DaoException("Unable to return the account ", e);
+        }
+        finally{
+            ClosingUtil.close(result);
+            ClosingUtil.close(statement);
         }
         return account;
     }
 
-    public boolean isAccountStatusBlocked(int id) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
+    public boolean isAccountStatusBlocked(int id) throws DaoException{
         boolean isBlocked = false;
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.CHECK_ACCOUNT_STATUS);
-        statement.setDouble(1, id);
-        ResultSet result = statement.executeQuery();
-        while(result.next()){
-            if(result.getInt("status") == 1){
-                isBlocked = true;
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.CHECK_ACCOUNT_STATUS);
+            statement.setDouble(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                if (result.getInt("status") == 1) {
+                    isBlocked = true;
+                }
             }
+        }
+        catch(SQLException e){
+            throw new DaoException("Unable to check account status ", e);
+        }
+        finally{
+            ClosingUtil.close(result);
+            ClosingUtil.close(statement);
         }
         return isBlocked;
     }
 
-    public List<Account> getBlockedAccounts() throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_BLOCKED_ACCOUNTS);
-        ResultSet result = statement.executeQuery();
+    public List<Account> getBlockedAccounts() throws DaoException{
         List<Account> list = new ArrayList<>();
-        while(result.next()){
-            Account account = buildAccount(result);
-            list.add(account);
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.GET_BLOCKED_ACCOUNTS);
+            result = statement.executeQuery();
+            while (result.next()) {
+                Account account = buildAccount(result);
+                list.add(account);
+            }
+        }
+        catch(SQLException e){
+            throw new DaoException("Unable to return list of blocked accounts ", e);
+        }
+        finally{
+            ClosingUtil.close(result);
+            ClosingUtil.close(statement);
         }
         return list;
     }
 
     @Override
-    public int getMaxId() throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_LAST_ACCOUNT_ID);
-        ResultSet result = statement.executeQuery();
+    public int getMaxId() throws DaoException {
         int lastId = -1;
-        while(result.next()){
-            lastId = result.getInt(1);
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.GET_LAST_ACCOUNT_ID);
+            result = statement.executeQuery();
+            while (result.next()) {
+                lastId = result.getInt(1);
+            }
+        }
+        catch(SQLException e){
+            throw new DaoException("Unable to return max id of accounts ", e);
+        }
+        finally{
+            ClosingUtil.close(result);
+            ClosingUtil.close(statement);
         }
         return lastId;
     }
 
-    public void updateAmount(double amount, int id) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.MAKE_ACCOUNT_OPERATION);
-        statement.setDouble(1, amount);
-        statement.setInt(2, id);
-        statement.executeUpdate();
+    public void updateAmount(double amount, int id) throws DaoException{
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.MAKE_ACCOUNT_OPERATION);
+            statement.setDouble(1, amount);
+            statement.setInt(2, id);
+            statement.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DaoException("Unable to update amount ", e);
+        }
+        finally{
+            ClosingUtil.close(statement);
+        }
     }
 
-    public void updateAccountStatus(int id, int status) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.CHANGE_STATUS);
-        statement.setInt(1, status);
-        statement.setInt(2, id);
-        statement.executeUpdate();
+    public void updateAccountStatus(int id, int status) throws DaoException{
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.CHANGE_STATUS);
+            statement.setInt(1, status);
+            statement.setInt(2, id);
+            statement.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DaoException("Unable to update account status ", e);
+        }
+        finally{
+            ClosingUtil.close(statement);
+        }
     }
 
     @Override
-    public void delete(int id)throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.DELETE_ACCOUNT_BY_ID);
-        statement.setInt(1, id);
-        statement.executeUpdate();
+    public void delete(int id)throws DaoException{
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.DELETE_ACCOUNT_BY_ID);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DaoException("Unable to delete the account ", e);
+        }
+        finally{
+            ClosingUtil.close(statement);
+        }
     }
 
     private Account buildAccount(ResultSet result) throws SQLException{

@@ -2,19 +2,11 @@
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
 package by.pvt.khudnitsky.payments.dao.impl;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import by.pvt.khudnitsky.payments.dao.AbstractDao;
 import by.pvt.khudnitsky.payments.entities.Card;
-import by.pvt.khudnitsky.payments.constants.ColumnName;
-import by.pvt.khudnitsky.payments.constants.SqlRequest;
-import by.pvt.khudnitsky.payments.managers.PoolManager;
+import by.pvt.khudnitsky.payments.exceptions.DaoException;
 
 /**
  * @author khudnitsky
@@ -34,38 +26,27 @@ public class CardDaoImpl extends AbstractDao<Card> {
     }
 
     @Override
-    public List<Card> getAll() throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_ALL_CARDS);
-        ResultSet result = statement.executeQuery();
-        List<Card> list = new ArrayList<>();
-        while(result.next()){
-            Card card = new Card();
-            card.setId(result.getInt(ColumnName.CARD_ID));
-            card.setAccountId(result.getInt(ColumnName.ACCOUNT_ID));
-            card.setValidity(result.getString(ColumnName.CARD_VALIDITY));
-            list.add(card);
-        }
-        return list;
+    public List<Card> getAll() throws DaoException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public int getMaxId() throws SQLException {
+    public int getMaxId() throws DaoException {
         throw new UnsupportedOperationException();
     }
 
 	    @Override
-    public void add(Card entity) throws SQLException {
+    public void add(Card entity) throws DaoException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Card getById(int id) throws SQLException {
+    public Card getById(int id) throws DaoException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void delete(int id) throws SQLException {
+    public void delete(int id) throws DaoException {
         throw new UnsupportedOperationException();
     }
 }

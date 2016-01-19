@@ -7,7 +7,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.log4j.Logger;
 
 //import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 
@@ -18,6 +20,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
  */
 
 public class PoolManager {
+    static Logger logger = Logger.getLogger(PoolManager.class.getName());
     private static PoolManager instance;
     private BasicDataSource dataSource;
 
@@ -52,8 +55,15 @@ public class PoolManager {
         return connectionHolder.get();
     }
 
-    public void releaseConnection(Connection connection) throws SQLException{
-        connection.close();
-        connectionHolder.remove();
+    public void releaseConnection(Connection connection){
+        if(connection != null){
+            try{
+                connection.close();
+                connectionHolder.remove();
+            }
+            catch(SQLException e){
+                logger.debug("Connection is already null " + e);
+            }
+        }
     }
 }

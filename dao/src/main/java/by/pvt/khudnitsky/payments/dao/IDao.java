@@ -4,6 +4,7 @@
 package by.pvt.khudnitsky.payments.dao;
 
 import by.pvt.khudnitsky.payments.entities.Entity;
+import by.pvt.khudnitsky.payments.exceptions.DaoException;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,10 +17,9 @@ import java.util.List;
  *
  */
 public interface IDao<T extends Entity> {
-    void add(T entity) throws SQLException;
-    List<T> getAll() throws SQLException;
-    T getById(int id) throws SQLException;
-    void delete(int id) throws SQLException;
-    int getMaxId() throws SQLException;
-    //void update(T entity) throws SQLException;
+    void add(T entity) throws DaoException;
+    List<T> getAll() throws DaoException;
+    T getById(int id) throws DaoException;
+    void delete(int id) throws DaoException;
+    int getMaxId() throws DaoException;
 }

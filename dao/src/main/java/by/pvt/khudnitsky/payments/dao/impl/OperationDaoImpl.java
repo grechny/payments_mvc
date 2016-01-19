@@ -14,7 +14,9 @@ import by.pvt.khudnitsky.payments.dao.AbstractDao;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.constants.ColumnName;
 import by.pvt.khudnitsky.payments.constants.SqlRequest;
+import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
+import by.pvt.khudnitsky.payments.utils.ClosingUtil;
 import by.pvt.khudnitsky.payments.utils.EntityBuilder;
 
 /**
@@ -35,60 +37,103 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
     }
 
     @Override
-    public void add(Operation entity) throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.CREATE_OPERATION);
-        statement.setInt(1, entity.getUserId());
-        statement.setInt(2, entity.getAccountId());
-        statement.setDouble(3, entity.getAmount());
-        statement.setString(4, entity.getDescription());
-        statement.executeUpdate();
+    public void add(Operation entity) throws DaoException {
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.CREATE_OPERATION);
+            statement.setInt(1, entity.getUserId());
+            statement.setInt(2, entity.getAccountId());
+            statement.setDouble(3, entity.getAmount());
+            statement.setString(4, entity.getDescription());
+            statement.executeUpdate();
+        }
+        catch (SQLException e){
+            throw new DaoException("Unable to add the operation ", e);
+        }
+        finally{
+            ClosingUtil.close(statement);
+        }
     }
 
     @Override
-    public List<Operation> getAll() throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_ALL_OPERATIONS);
-        ResultSet result = statement.executeQuery();
+    public List<Operation> getAll() throws DaoException {
         List<Operation> list = new ArrayList<>();
-        while(result.next()){
-            Operation operation = buildOperation(result);
-            list.add(operation);
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.GET_ALL_OPERATIONS);
+            result = statement.executeQuery();
+            while (result.next()) {
+                Operation operation = buildOperation(result);
+                list.add(operation);
+            }
+        }
+        catch (SQLException e){
+            throw new DaoException("Unable to return list of operations ", e);
+        }
+        finally{
+            ClosingUtil.close(result);
+            ClosingUtil.close(statement);
         }
         return list;
     }
 
     @Override
-    public Operation getById(int id) throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_OPERATION_BY_ID);
-        statement.setInt(1, id);
-        ResultSet result = statement.executeQuery();
+    public Operation getById(int id) throws DaoException {
         Operation operation = null;
-        while(result.next()){
-            operation = buildOperation(result);
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.GET_OPERATION_BY_ID);
+            statement.setInt(1, id);
+            result = statement.executeQuery();
+            while (result.next()) {
+                operation = buildOperation(result);
+            }
+        }
+        catch (SQLException e){
+            throw new DaoException("Unable to return the operation ", e);
+        }
+        finally{
+            ClosingUtil.close(result);
+            ClosingUtil.close(statement);
         }
         return operation;
     }
 
     @Override
-    public int getMaxId() throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.GET_LAST_OPERATION_ID);
-        ResultSet result = statement.executeQuery();
+    public int getMaxId() throws DaoException {
         int lastId = -1;
-        while(result.next()){
-            lastId = result.getInt(1);
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.GET_LAST_OPERATION_ID);
+            result = statement.executeQuery();
+            while (result.next()) {
+                lastId = result.getInt(1);
+            }
+        }
+        catch(SQLException e){
+            throw new DaoException("Unable to return max id of accounts ", e);
+        }
+        finally{
+            ClosingUtil.close(result);
+            ClosingUtil.close(statement);
         }
         return lastId;
     }
 
     @Override
-    public void delete(int id)throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SqlRequest.DELETE_OPERATION_BY_ID);
-        statement.setInt(1, id);
-        statement.executeUpdate();
+    public void delete(int id)throws DaoException{
+        try {
+            connection = PoolManager.getInstance().getConnection();
+            statement = connection.prepareStatement(SqlRequest.DELETE_OPERATION_BY_ID);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        }
+        catch (SQLException e){
+            throw new DaoException("Unable to delete the operation ", e);
+        }
+        finally{
+            ClosingUtil.close(statement);
+        }
     }
 
     private Operation buildOperation(ResultSet result) throws SQLException{
