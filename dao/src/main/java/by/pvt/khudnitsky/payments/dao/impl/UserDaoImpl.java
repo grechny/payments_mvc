@@ -53,6 +53,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to add the user account ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -76,6 +77,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to return list of users ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -99,6 +101,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to return the user ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -121,6 +124,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to return the user ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -143,6 +147,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to check the user ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -166,6 +171,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to check the user ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -188,6 +194,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to get max user id ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -207,6 +214,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to delete the user ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{

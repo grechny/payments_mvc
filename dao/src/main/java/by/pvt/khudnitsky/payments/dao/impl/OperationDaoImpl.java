@@ -52,6 +52,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
         }
         catch (SQLException e){
             message = "Unable to add the operation ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -73,6 +74,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
         }
         catch (SQLException e){
             message = "Unable to return list of operations ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -96,6 +98,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
         }
         catch (SQLException e){
             message = "Unable to return the operation ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -118,6 +121,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
         }
         catch(SQLException e){
             message = "Unable to return max id of accounts ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -137,6 +141,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
         }
         catch (SQLException e){
             message = "Unable to delete the operation ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{

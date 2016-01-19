@@ -4,9 +4,9 @@
 package by.pvt.khudnitsky.payments.constants;
 
 /**
+ * Contains constants that describe column name in database tables
  * @author khudnitsky
  * @version 1.0
- *
  */
 public class ColumnName {
 

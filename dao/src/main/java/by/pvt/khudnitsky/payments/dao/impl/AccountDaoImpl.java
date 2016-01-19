@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This class is responsible to get data from a data source which can be
+ * database / xml or any other storage mechanism.
  * @author khudnitsky
  * @version 1.0
  *
@@ -30,6 +32,10 @@ public class AccountDaoImpl extends AbstractDao<Account> {
 
     private AccountDaoImpl(){}
 
+    /**
+     * Singleton method
+     * @return entity of <b>AccountDaoImpl</b>
+     */
     public static synchronized AccountDaoImpl getInstance(){
         if(instance == null){
             instance = new AccountDaoImpl();
@@ -37,6 +43,11 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         return instance;
     }
 
+    /**
+     * Adds new account to the storage
+     * @param account - entity of <b>Account</b>
+     * @throws DaoException
+     */
     @Override
     public void add(Account account) throws DaoException {
         try {
@@ -50,6 +61,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch (SQLException e){
             message = "Unable to add the account ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -57,6 +69,11 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
     }
 
+    /**
+     * Gets list of accounts from the storage
+     * @return list of accounts
+     * @throws DaoException
+     */
     @Override
     public List<Account> getAll() throws DaoException {
         List<Account> list = new ArrayList<>();
@@ -71,6 +88,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch (SQLException e){
             message = "Unable to return list of accounts ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -80,6 +98,12 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         return list;
     }
 
+    /**
+     * Gets account by account's id from the storage
+     * @param id - account's id
+     * @return entity of <b>Account</b>
+     * @throws DaoException
+     */
     @Override
     public Account getById(int id) throws DaoException{
         Account account = null;
@@ -95,6 +119,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to return the account ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -104,6 +129,12 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         return account;
     }
 
+    /**
+     * Checks if account is blocked
+     * @param id - account's id
+     * @return true - if account is blocked, false - otherwise
+     * @throws DaoException
+     */
     public boolean isAccountStatusBlocked(int id) throws DaoException{
         boolean isBlocked = false;
         try {
@@ -119,6 +150,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to check account status ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -128,6 +160,11 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         return isBlocked;
     }
 
+    /**
+     * Gets list of blocked accounts from the storage
+     * @return list of blocked accounts
+     * @throws DaoException
+     */
     public List<Account> getBlockedAccounts() throws DaoException{
         List<Account> list = new ArrayList<>();
         try {
@@ -141,6 +178,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to return list of blocked accounts ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -150,6 +188,11 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         return list;
     }
 
+    /**
+     * Gets maximum account's id in the storage
+     * @return max account's id
+     * @throws DaoException
+     */
     @Override
     public int getMaxId() throws DaoException {
         int lastId = -1;
@@ -163,6 +206,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to return max id of accounts ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -172,6 +216,12 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         return lastId;
     }
 
+    /**
+     * Updates account
+     * @param amount - amount
+     * @param id - account's id
+     * @throws DaoException
+     */
     public void updateAmount(double amount, int id) throws DaoException{
         try {
             connection = PoolManager.getInstance().getConnection();
@@ -182,12 +232,20 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to update amount ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(statement);
         }
     }
+
+    /**
+     * Updates account
+     * @param id - account's id
+     * @param status - account's status
+     * @throws DaoException
+     */
 
     public void updateAccountStatus(int id, int status) throws DaoException{
         try {
@@ -199,6 +257,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to update account status ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -206,6 +265,11 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
     }
 
+    /**
+     * Deletes account from the storage
+     * @param id - account's id
+     * @throws DaoException
+     */
     @Override
     public void delete(int id)throws DaoException{
         try {
@@ -216,6 +280,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to delete the account ";
+            logger.debug(message);
             throw new DaoException(message, e);
         }
         finally{
@@ -223,6 +288,12 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
     }
 
+    /**
+     * Builds account from ResultSet object
+     * @param result - ResultSet object
+     * @return entity of <b>Account</b>
+     * @throws SQLException
+     */
     private Account buildAccount(ResultSet result) throws SQLException{
         int id = result.getInt(ColumnName.ACCOUNT_ID);
         String currency = result.getString(ColumnName.ACCOUNT_CURRENCY);

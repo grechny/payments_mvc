@@ -12,7 +12,6 @@ import java.util.List;
  * Describes the interface <b>Entity</b>
  * @author khudnitsky
  * @version 1.0
- *
  */
 public interface IDao<T extends Entity> {
     void add(T entity) throws DaoException;

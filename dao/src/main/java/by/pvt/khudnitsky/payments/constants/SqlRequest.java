@@ -2,11 +2,10 @@
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
 package by.pvt.khudnitsky.payments.constants;
-
 /**
+ * Contains constants that describe SQL requests
  * @author khudnitsky
  * @version 1.0
- *
  */
 public class SqlRequest {
     public static final String GET_ALL_CLIENTS = "SELECT first_name, last_name FROM users WHERE access_level = 0 ORDER BY last_name";
