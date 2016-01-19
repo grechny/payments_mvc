@@ -10,6 +10,7 @@ import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.exceptions.ServiceException;
 import by.pvt.khudnitsky.payments.services.AbstractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public class AccountServiceImpl extends AbstractService<Account> {
     private static AccountServiceImpl instance;
+    static Logger logger = Logger.getLogger(AccountServiceImpl.class.getName());
 
     private AccountServiceImpl(){}
 
@@ -43,9 +45,11 @@ public class AccountServiceImpl extends AbstractService<Account> {
             connection.setAutoCommit(false);
             AccountDaoImpl.getInstance().add(entity);
             connection.commit();
+            logger.info("Transaction succeeded");
          }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
     }
@@ -76,9 +80,11 @@ public class AccountServiceImpl extends AbstractService<Account> {
             connection.setAutoCommit(false);
             account = AccountDaoImpl.getInstance().getById(id);
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
         return account;
@@ -113,9 +119,11 @@ public class AccountServiceImpl extends AbstractService<Account> {
             connection.setAutoCommit(false);
             accounts = AccountDaoImpl.getInstance().getBlockedAccounts();
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
         return accounts;
@@ -128,9 +136,11 @@ public class AccountServiceImpl extends AbstractService<Account> {
             connection.setAutoCommit(false);
             AccountDaoImpl.getInstance().updateAccountStatus(id, status);
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
     }
@@ -142,9 +152,11 @@ public class AccountServiceImpl extends AbstractService<Account> {
             connection.setAutoCommit(false);
             isBlocked = AccountDaoImpl.getInstance().isAccountStatusBlocked(id);
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
         return isBlocked;
@@ -158,9 +170,11 @@ public class AccountServiceImpl extends AbstractService<Account> {
             OperationDaoImpl.getInstance().add(operation);
             AccountDaoImpl.getInstance().updateAmount(amount, user.getAccountId());
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
     }
@@ -173,9 +187,11 @@ public class AccountServiceImpl extends AbstractService<Account> {
             OperationDaoImpl.getInstance().add(operation);
             AccountDaoImpl.getInstance().updateAccountStatus(user.getAccountId(), AccountStatus.BLOCKED);
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
     }
@@ -188,9 +204,11 @@ public class AccountServiceImpl extends AbstractService<Account> {
             OperationDaoImpl.getInstance().add(operation);
             AccountDaoImpl.getInstance().updateAmount((-1) * amount, user.getAccountId());
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
     }

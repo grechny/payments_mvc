@@ -9,6 +9,7 @@ import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.exceptions.ServiceException;
 import by.pvt.khudnitsky.payments.services.AbstractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public class UserServiceImpl extends AbstractService<User> {
     private static UserServiceImpl instance;
+    static Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
 
     private UserServiceImpl(){}
 
@@ -54,9 +56,11 @@ public class UserServiceImpl extends AbstractService<User> {
             connection.setAutoCommit(false);
             users = UserDaoImpl.getInstance().getAll();
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
         return users;
@@ -103,9 +107,11 @@ public class UserServiceImpl extends AbstractService<User> {
             connection.setAutoCommit(false);
             isAuthorized = UserDaoImpl.getInstance().isAuthorized(login, password);
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
         return isAuthorized;
@@ -118,9 +124,11 @@ public class UserServiceImpl extends AbstractService<User> {
             connection.setAutoCommit(false);
             user = UserDaoImpl.getInstance().getByLogin(login);
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
         return user;
@@ -146,9 +154,11 @@ public class UserServiceImpl extends AbstractService<User> {
                 isNew = true;
             }
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
         //PoolManager.getInstance().releaseConnection(connection);
@@ -162,9 +172,11 @@ public class UserServiceImpl extends AbstractService<User> {
             AccountDaoImpl.getInstance().add(account);
             UserDaoImpl.getInstance().add(user);
             connection.commit();
+            logger.info("Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
+            logger.info("Transaction failed");
             throw new ServiceException(e.getMessage());
         }
     }

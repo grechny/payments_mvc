@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
  */
 public class UserDaoImpl extends AbstractDao<User> {
     private static UserDaoImpl instance;
-    static Logger logger = Logger.getLogger(OperationDaoImpl.class.getName());
+    static Logger logger = Logger.getLogger(UserDaoImpl.class.getName());
     static String message;
 
     private UserDaoImpl(){}

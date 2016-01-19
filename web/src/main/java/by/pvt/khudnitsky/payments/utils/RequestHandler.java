@@ -23,7 +23,6 @@ public class RequestHandler {
         ICommand сommand = commandFactory.defineCommand(request);
         String page = сommand.execute(request);
         if (page != null) {
-            System.out.println("Servlet");
             RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(page);
             dispatcher.forward(request, response);
         } else {

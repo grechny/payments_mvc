@@ -9,6 +9,7 @@ import by.pvt.khudnitsky.payments.commands.ICommand;
 import by.pvt.khudnitsky.payments.commands.impl.user.LoginUserCommand;
 import by.pvt.khudnitsky.payments.constants.Parameters;
 import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
+import org.apache.log4j.Logger;
 
 /**
  * @author khudnitsky
@@ -17,6 +18,7 @@ import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
  */
 public class CommandFactory {
     private static CommandFactory instance;
+    static Logger logger = Logger.getLogger(CommandFactory.class.getName());
 
     private CommandFactory(){}
 
@@ -33,9 +35,9 @@ public class CommandFactory {
             CommandType type = RequestParameterParser.getCommandType(request);
             current = type.getCurrentCommand();
         }
-        catch(NullPointerException | IllegalArgumentException e){
+        catch(IllegalArgumentException e){
+            logger.debug("Incorrect command attempt", e);
             current = new LoginUserCommand();
-            // TODO сделать простой if
         }
         return current;
     }
