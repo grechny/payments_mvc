@@ -12,6 +12,7 @@ import by.pvt.khudnitsky.payments.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.commands.factory.CommandType;
 import by.pvt.khudnitsky.payments.constants.*;
 import by.pvt.khudnitsky.payments.entities.User;
+import by.pvt.khudnitsky.payments.exceptions.ServiceException;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.AccountServiceImpl;
@@ -48,7 +49,8 @@ public class AddFundsCommand extends AbstractCommand {
                 } else {
                     page = ConfigurationManager.getInstance().getProperty(PagePath.CLIENT_BLOCK_PAGE_PATH);
                 }
-            } catch (SQLException e) {
+            }
+            catch (ServiceException | SQLException e) {
                 PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
                 page = ConfigurationManager.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));

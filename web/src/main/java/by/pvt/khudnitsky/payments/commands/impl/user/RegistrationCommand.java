@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import by.pvt.khudnitsky.payments.constants.PagePath;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.User;
+import by.pvt.khudnitsky.payments.exceptions.ServiceException;
 import by.pvt.khudnitsky.payments.services.impl.UserServiceImpl;
 import by.pvt.khudnitsky.payments.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.constants.MessageConstants;
@@ -52,7 +53,7 @@ public class RegistrationCommand extends AbstractCommand {
                 page = ConfigurationManager.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
             }
         }
-        catch (SQLException e) {
+        catch (ServiceException | SQLException e) {
             PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
             page = ConfigurationManager.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
             request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
