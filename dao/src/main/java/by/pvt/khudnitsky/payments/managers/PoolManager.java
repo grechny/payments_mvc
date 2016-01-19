@@ -52,10 +52,13 @@ public class PoolManager {
             if (connectionHolder.get() == null) {
                 Connection connection = connect();
                 connectionHolder.set(connection);
+                logger.debug(Thread.currentThread().getName() + " set connection");
             }
         }
         catch(SQLException e){
-            throw new DaoException("Unable to get connection", e);
+            String message = "Unable to get connection";
+            logger.debug(message, e);
+            throw new DaoException(message, e);
         }
         return connectionHolder.get();
     }

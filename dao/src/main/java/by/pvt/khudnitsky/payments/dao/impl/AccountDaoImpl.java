@@ -11,6 +11,7 @@ import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 import by.pvt.khudnitsky.payments.utils.ClosingUtil;
 import by.pvt.khudnitsky.payments.utils.EntityBuilder;
+import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,6 +25,8 @@ import java.util.List;
  */
 public class AccountDaoImpl extends AbstractDao<Account> {
     private static AccountDaoImpl instance;
+    static Logger logger = Logger.getLogger(AccountDaoImpl.class.getName());
+    static String message;
 
     private AccountDaoImpl(){}
 
@@ -46,7 +49,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
             statement.executeUpdate();
         }
         catch (SQLException e){
-            throw new DaoException("Unable to add the account ", e);
+            message = "Unable to add the account ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(statement);
@@ -66,7 +70,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
             }
         }
         catch (SQLException e){
-            throw new DaoException("Unable to return list of accounts ", e);
+            message = "Unable to return list of accounts ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -89,7 +94,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
             }
         }
         catch(SQLException e){
-            throw new DaoException("Unable to return the account ", e);
+            message = "Unable to return the account ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -112,7 +118,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
             }
         }
         catch(SQLException e){
-            throw new DaoException("Unable to check account status ", e);
+            message = "Unable to check account status ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -133,7 +140,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
             }
         }
         catch(SQLException e){
-            throw new DaoException("Unable to return list of blocked accounts ", e);
+            message = "Unable to return list of blocked accounts ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -154,7 +162,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
             }
         }
         catch(SQLException e){
-            throw new DaoException("Unable to return max id of accounts ", e);
+            message = "Unable to return max id of accounts ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -172,7 +181,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
             statement.executeUpdate();
         }
         catch(SQLException e){
-            throw new DaoException("Unable to update amount ", e);
+            message = "Unable to update amount ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(statement);
@@ -188,7 +198,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
             statement.executeUpdate();
         }
         catch(SQLException e){
-            throw new DaoException("Unable to update account status ", e);
+            message = "Unable to update account status ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(statement);
@@ -204,7 +215,8 @@ public class AccountDaoImpl extends AbstractDao<Account> {
             statement.executeUpdate();
         }
         catch(SQLException e){
-            throw new DaoException("Unable to delete the account ", e);
+            message = "Unable to delete the account ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(statement);

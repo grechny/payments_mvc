@@ -18,6 +18,7 @@ import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 import by.pvt.khudnitsky.payments.utils.ClosingUtil;
 import by.pvt.khudnitsky.payments.utils.EntityBuilder;
+import org.apache.log4j.Logger;
 
 /**
  * @author khudnitsky
@@ -26,6 +27,8 @@ import by.pvt.khudnitsky.payments.utils.EntityBuilder;
  */
 public class UserDaoImpl extends AbstractDao<User> {
     private static UserDaoImpl instance;
+    static Logger logger = Logger.getLogger(OperationDaoImpl.class.getName());
+    static String message;
 
     private UserDaoImpl(){}
 
@@ -49,7 +52,8 @@ public class UserDaoImpl extends AbstractDao<User> {
             statement.executeUpdate();
         }
         catch (SQLException e){
-            throw new DaoException("Unable to add the user account ", e);
+            message = "Unable to add the user account ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(statement);
@@ -71,7 +75,8 @@ public class UserDaoImpl extends AbstractDao<User> {
             }
         }
         catch (SQLException e){
-            throw new DaoException("Unable to return list of users ", e);
+            message = "Unable to return list of users ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -93,7 +98,8 @@ public class UserDaoImpl extends AbstractDao<User> {
             }
         }
         catch (SQLException e){
-            throw new DaoException("Unable to return the user ", e);
+            message = "Unable to return the user ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -114,7 +120,8 @@ public class UserDaoImpl extends AbstractDao<User> {
             }
         }
         catch (SQLException e){
-            throw new DaoException("Unable to return the user ", e);
+            message = "Unable to return the user ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -135,7 +142,8 @@ public class UserDaoImpl extends AbstractDao<User> {
             }
         }
         catch (SQLException e){
-            throw new DaoException("Unable to check the user ", e);
+            message = "Unable to check the user ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -157,7 +165,8 @@ public class UserDaoImpl extends AbstractDao<User> {
             }
         }
         catch (SQLException e){
-            throw new DaoException("Unable to check the user ", e);
+            message = "Unable to check the user ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -178,7 +187,8 @@ public class UserDaoImpl extends AbstractDao<User> {
             }
         }
         catch (SQLException e){
-            throw new DaoException("Unable to get max user id ", e);
+            message = "Unable to get max user id ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -196,7 +206,8 @@ public class UserDaoImpl extends AbstractDao<User> {
             statement.executeUpdate();
         }
         catch (SQLException e){
-            throw new DaoException("Unable to delete the user ", e);
+            message = "Unable to delete the user ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(statement);

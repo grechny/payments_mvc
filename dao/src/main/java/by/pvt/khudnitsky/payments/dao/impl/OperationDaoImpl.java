@@ -18,6 +18,7 @@ import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 import by.pvt.khudnitsky.payments.utils.ClosingUtil;
 import by.pvt.khudnitsky.payments.utils.EntityBuilder;
+import org.apache.log4j.Logger;
 
 /**
  * @author khudnitsky
@@ -26,6 +27,8 @@ import by.pvt.khudnitsky.payments.utils.EntityBuilder;
  */
 public class OperationDaoImpl extends AbstractDao<Operation> {
     private static OperationDaoImpl instance;
+    static Logger logger = Logger.getLogger(OperationDaoImpl.class.getName());
+    static String message;
 
     private OperationDaoImpl(){}
 
@@ -48,7 +51,8 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
             statement.executeUpdate();
         }
         catch (SQLException e){
-            throw new DaoException("Unable to add the operation ", e);
+            message = "Unable to add the operation ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(statement);
@@ -68,7 +72,8 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
             }
         }
         catch (SQLException e){
-            throw new DaoException("Unable to return list of operations ", e);
+            message = "Unable to return list of operations ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -90,7 +95,8 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
             }
         }
         catch (SQLException e){
-            throw new DaoException("Unable to return the operation ", e);
+            message = "Unable to return the operation ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -111,7 +117,8 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
             }
         }
         catch(SQLException e){
-            throw new DaoException("Unable to return max id of accounts ", e);
+            message = "Unable to return max id of accounts ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(result);
@@ -129,7 +136,8 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
             statement.executeUpdate();
         }
         catch (SQLException e){
-            throw new DaoException("Unable to delete the operation ", e);
+            message = "Unable to delete the operation ";
+            throw new DaoException(message, e);
         }
         finally{
             ClosingUtil.close(statement);
