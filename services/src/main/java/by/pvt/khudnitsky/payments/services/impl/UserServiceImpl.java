@@ -5,6 +5,8 @@ import by.pvt.khudnitsky.payments.dao.impl.AccountDaoImpl;
 import by.pvt.khudnitsky.payments.dao.impl.UserDaoImpl;
 import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.User;
+import by.pvt.khudnitsky.payments.exceptions.DaoException;
+import by.pvt.khudnitsky.payments.exceptions.ServiceException;
 import by.pvt.khudnitsky.payments.services.AbstractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 
@@ -45,18 +47,18 @@ public class UserServiceImpl extends AbstractService<User> {
      * @throws SQLException
      */
     @Override
-    public List<User> getAll() throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public List<User> getAll() throws SQLException, ServiceException {
         List<User> users = null;
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             users = UserDaoImpl.getInstance().getAll();
             connection.commit();
         }
-        catch(SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
         return users;
     }
 
@@ -94,33 +96,33 @@ public class UserServiceImpl extends AbstractService<User> {
         throw new UnsupportedOperationException();
     }
 
-    public boolean checkUserAuthorization(String login, String password) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public boolean checkUserAuthorization(String login, String password) throws SQLException, ServiceException {
         boolean isAuthorized = false;
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             isAuthorized = UserDaoImpl.getInstance().isAuthorized(login, password);
             connection.commit();
         }
-        catch(SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
         return isAuthorized;
     }
 
-    public User getUserByLogin(String login) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public User getUserByLogin(String login) throws SQLException, ServiceException {
         User user = null;
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             user = UserDaoImpl.getInstance().getByLogin(login);
             connection.commit();
         }
-        catch(SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
         return user;
     }
 
@@ -135,34 +137,35 @@ public class UserServiceImpl extends AbstractService<User> {
         return userType;
     }
 
-    public boolean checkIsNewUser(User user) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public boolean checkIsNewUser(User user) throws SQLException, ServiceException {
         boolean isNew = false;
         try {
-            if((AccountDaoImpl.getInstance().getById(user.getAccountId()) == null) & (UserDaoImpl.getInstance().isNewUser(user.getLogin()))){
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
+            if ((AccountDaoImpl.getInstance().getById(user.getAccountId()) == null) & (UserDaoImpl.getInstance().isNewUser(user.getLogin()))) {
                 isNew = true;
             }
             connection.commit();
         }
-        catch(SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
         //PoolManager.getInstance().releaseConnection(connection);
         return isNew;
     }
 
-    public void registrateUser(User user, Account account) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public void registrateUser(User user, Account account) throws SQLException, ServiceException {
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             AccountDaoImpl.getInstance().add(account);
             UserDaoImpl.getInstance().add(user);
             connection.commit();
         }
-        catch(SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
     }
 }

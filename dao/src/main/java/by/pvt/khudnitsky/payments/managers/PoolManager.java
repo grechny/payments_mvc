@@ -43,14 +43,19 @@ public class PoolManager {
     }
 
     private Connection connect() throws SQLException {
-        Connection connection  = dataSource.getConnection();
+        Connection connection = dataSource.getConnection();
         return connection;
     }
 
-    public Connection getConnection() throws SQLException {
-        if(connectionHolder.get() == null) {
-            Connection connection = connect();
-            connectionHolder.set(connection);
+    public Connection getConnection() throws DaoException {
+        try {
+            if (connectionHolder.get() == null) {
+                Connection connection = connect();
+                connectionHolder.set(connection);
+            }
+        }
+        catch(SQLException e){
+            throw new DaoException("Unable to get connection", e);
         }
         return connectionHolder.get();
     }

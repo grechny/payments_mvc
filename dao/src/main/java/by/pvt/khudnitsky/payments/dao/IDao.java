@@ -6,8 +6,6 @@ package by.pvt.khudnitsky.payments.dao;
 import by.pvt.khudnitsky.payments.entities.Entity;
 import by.pvt.khudnitsky.payments.exceptions.DaoException;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 /**

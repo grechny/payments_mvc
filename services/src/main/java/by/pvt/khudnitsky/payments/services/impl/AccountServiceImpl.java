@@ -6,6 +6,8 @@ import by.pvt.khudnitsky.payments.entities.Account;
 import by.pvt.khudnitsky.payments.entities.Operation;
 import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.constants.AccountStatus;
+import by.pvt.khudnitsky.payments.exceptions.DaoException;
+import by.pvt.khudnitsky.payments.exceptions.ServiceException;
 import by.pvt.khudnitsky.payments.services.AbstractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 
@@ -35,17 +37,17 @@ public class AccountServiceImpl extends AbstractService<Account> {
      * @throws SQLException
      */
     @Override
-    public void add(Account entity) throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public void add(Account entity) throws ServiceException, SQLException {
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             AccountDaoImpl.getInstance().add(entity);
             connection.commit();
-        }
-        catch(SQLException e){
+         }
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
     }
 
     /**
@@ -67,18 +69,18 @@ public class AccountServiceImpl extends AbstractService<Account> {
      * @throws SQLException
      */
     @Override
-    public Account getById(int id) throws SQLException {
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public Account getById(int id) throws SQLException, ServiceException {
         Account account = null;
         try {
-             account = AccountDaoImpl.getInstance().getById(id);
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
+            account = AccountDaoImpl.getInstance().getById(id);
             connection.commit();
         }
-        catch (SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
         return account;
     }
 
@@ -104,93 +106,93 @@ public class AccountServiceImpl extends AbstractService<Account> {
         throw new UnsupportedOperationException();
     }
 
-    public List<Account> getBlockedAccounts() throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public List<Account> getBlockedAccounts() throws SQLException, ServiceException {
         List<Account> accounts = null;
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             accounts = AccountDaoImpl.getInstance().getBlockedAccounts();
             connection.commit();
         }
-        catch (SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
         return accounts;
     }
 
 
-    public void updateAccountStatus(int id, int status) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public void updateAccountStatus(int id, int status) throws SQLException, ServiceException {
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             AccountDaoImpl.getInstance().updateAccountStatus(id, status);
             connection.commit();
         }
-        catch (SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
     }
 
-    public boolean checkAccountStatus(int id) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public boolean checkAccountStatus(int id) throws SQLException, ServiceException{
         boolean isBlocked = false;
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             isBlocked = AccountDaoImpl.getInstance().isAccountStatusBlocked(id);
             connection.commit();
         }
-        catch (SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
         return isBlocked;
     }
 
-    public void addFunds(User user, String description, double amount) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public void addFunds(User user, String description, double amount) throws SQLException, ServiceException{
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             Operation operation = buildOperation(user, description, amount);
             OperationDaoImpl.getInstance().add(operation);
             AccountDaoImpl.getInstance().updateAmount(amount, user.getAccountId());
             connection.commit();
         }
-        catch (SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
     }
 
-    public void blockAccount(User user, String description) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public void blockAccount(User user, String description) throws SQLException, ServiceException {
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             Operation operation = buildOperation(user, description, 0);
             OperationDaoImpl.getInstance().add(operation);
             AccountDaoImpl.getInstance().updateAccountStatus(user.getAccountId(), AccountStatus.BLOCKED);
             connection.commit();
         }
-        catch (SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
     }
 
-    public void payment(User user, String description, double amount) throws SQLException{
-        Connection connection = PoolManager.getInstance().getConnection();
-        connection.setAutoCommit(false);
+    public void payment(User user, String description, double amount) throws SQLException, ServiceException {
         try {
+            connection = PoolManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
             Operation operation = buildOperation(user, description, amount);
             OperationDaoImpl.getInstance().add(operation);
             AccountDaoImpl.getInstance().updateAmount((-1) * amount, user.getAccountId());
             connection.commit();
         }
-        catch (SQLException e){
+        catch (SQLException | DaoException e) {
             connection.rollback();
+            throw new ServiceException(e.getMessage());
         }
-        //PoolManager.getInstance().releaseConnection(connection);
     }
 
     private Operation buildOperation(User user, String description, double amount){
