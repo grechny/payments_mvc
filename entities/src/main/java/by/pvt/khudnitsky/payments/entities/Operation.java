@@ -17,9 +17,6 @@ public class Operation extends Entity{
     private String description;
     private String date;        //TODO Calendar
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -34,9 +31,6 @@ public class Operation extends Entity{
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -79,9 +73,6 @@ public class Operation extends Entity{
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "Operation [userId=" + userId + ", accountId=" + accountId + ", amount=" + amount + ", description=" + description + ", date=" + date + "]";
