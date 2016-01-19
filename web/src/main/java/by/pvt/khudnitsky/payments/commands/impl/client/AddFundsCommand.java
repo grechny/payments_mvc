@@ -15,6 +15,7 @@ import by.pvt.khudnitsky.payments.entities.User;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.AccountServiceImpl;
+import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
 import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 
 /**
@@ -28,16 +29,14 @@ public class AddFundsCommand extends AbstractCommand {
     public String execute(HttpServletRequest request) {
         String page = null;
         HttpSession session = request.getSession();
-        UserType userType = (UserType)session.getAttribute(Parameters.USERTYPE);
+        UserType userType = RequestParameterParser.getUserType(request);
         if(userType == UserType.CLIENT) {
-            User user = (User) session.getAttribute(Parameters.USER);
-            int aid = user.getAccountId();
+            User user = RequestParameterParser.getRecordUser(request);
             try {
-                if (!AccountServiceImpl.getInstance().checkAccountStatus(aid)) {
-                    double amount = Double.valueOf(request.getParameter(Parameters.ADD_FUNDS));
+                if (!AccountServiceImpl.getInstance().checkAccountStatus(user.getAccountId())) {
+                    double amount = RequestParameterParser.getAmountFromFunds(request);
                     if (amount > 0) {
-                        String commandName = request.getParameter(Parameters.COMMAND);
-                        CommandType type = CommandType.valueOf(commandName.toUpperCase());
+                        CommandType type = RequestParameterParser.getCommandType(request);
                         String description = type.getValue();
                         AccountServiceImpl.getInstance().addFunds(user, description, amount);
                         request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));

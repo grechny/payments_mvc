@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import by.pvt.khudnitsky.payments.commands.ICommand;
 import by.pvt.khudnitsky.payments.commands.impl.user.LoginUserCommand;
 import by.pvt.khudnitsky.payments.constants.Parameters;
+import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
 
 /**
  * @author khudnitsky
@@ -28,9 +29,8 @@ public class CommandFactory {
 
     public ICommand defineCommand(HttpServletRequest request){
         ICommand current = null;
-        String commandName = request.getParameter(Parameters.COMMAND);
         try{
-            CommandType type = CommandType.valueOf(commandName.toUpperCase());
+            CommandType type = RequestParameterParser.getCommandType(request);
             current = type.getCurrentCommand();
         }
         catch(NullPointerException | IllegalArgumentException e){

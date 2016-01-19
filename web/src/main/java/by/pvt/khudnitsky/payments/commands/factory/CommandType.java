@@ -91,7 +91,8 @@ public enum CommandType {
                 return new GoBackAdminCommand();
 
             default:
-                throw new EnumConstantNotPresentException(this.getDeclaringClass(), this.name());
+                return new LoginUserCommand();
+                //throw new EnumConstantNotPresentException(this.getDeclaringClass(), this.name());
         }
     }
 

@@ -14,48 +14,50 @@ import java.util.List;
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
 public class RequestParameterParser {
-    private RequestParameterParser() {
-    }
+    private RequestParameterParser() {}
 
-    public static User getUser(HttpServletRequest request) throws NumberFormatException {
-        //TODO обработка исключений
-        int id = Integer.valueOf(request.getParameter(Parameters.USER_ID));
+    public static User getUser(HttpServletRequest request){
+        int id = 0;
+        if (request.getParameter(Parameters.USER_ID) != null){
+            id = Integer.valueOf(request.getParameter(Parameters.USER_ID));
+        }
+        int accountId = 0;
+        if (request.getParameter(Parameters.ACCOUNT_ID) != null){
+            accountId = Integer.valueOf(request.getParameter(Parameters.ACCOUNT_ID));
+        }
+        int accessLevel = 0;
+        if (request.getParameter(Parameters.USER_ACCESS_LEVEL) != null){
+            accessLevel = Integer.valueOf(request.getParameter(Parameters.USER_ACCESS_LEVEL));
+        }
         String firstName = request.getParameter(Parameters.USER_FIRST_NAME);
         String lastName = request.getParameter(Parameters.USER_LAST_NAME);
         String login = request.getParameter(Parameters.USER_LOGIN);
         String password = request.getParameter(Parameters.USER_PASSWORD);
-        int accountId = Integer.valueOf(request.getParameter(Parameters.ACCOUNT_ID));
-        int accessLevel = Integer.valueOf(request.getParameter(Parameters.USER_ACCESS_LEVEL));
         User user = EntityBuilder.buildUser(id, firstName, lastName, accountId, login, password, accessLevel);
         return user;
     }
 
     public static Account getAccount(HttpServletRequest request) throws NumberFormatException {
         int id = Integer.valueOf(request.getParameter(Parameters.ACCOUNT_ID));
+
         String currency = request.getParameter(Parameters.ACCOUNT_CURRENCY);
-        double amount = Double.valueOf(request.getParameter(Parameters.AMOUNT));
-        int status = Integer.valueOf(request.getParameter(Parameters.ACCOUNT_STATUS));
+
+        double amount = 0;
+        if(request.getParameter(Parameters.AMOUNT) != null){
+            amount = Double.valueOf(request.getParameter(Parameters.AMOUNT));
+        }
+
+        int status = 0;
+        if (request.getParameter(Parameters.ACCOUNT_STATUS) != null){
+            status = Integer.valueOf(request.getParameter(Parameters.ACCOUNT_STATUS));
+        }
+
         Account account = EntityBuilder.buildAccount(id, currency, amount, status);
         return account;
     }
 
-    public static Operation getOperation(HttpServletRequest request) throws NumberFormatException {
-        int id = Integer.valueOf(request.getParameter(Parameters.OPERATION_ID));
-        int userId = Integer.valueOf(request.getParameter(Parameters.USER_ID));
-        int accountId = Integer.valueOf(request.getParameter(Parameters.ACCOUNT_ID));
-        double amount = Double.valueOf(request.getParameter(Parameters.AMOUNT));
-        String description = request.getParameter(Parameters.OPERATION_DESCRIPTION);
-        String date = request.getParameter(Parameters.OPERATION_DATE);
-        Operation operation = EntityBuilder.buildOperation(id, userId, accountId, amount, description, date);
-        return operation;
-    }
-
     public static UserType getUserType(HttpServletRequest request) {
         return (UserType) request.getSession().getAttribute(Parameters.USERTYPE);
-    }
-
-    public static int getAccountId(HttpServletRequest request) throws NumberFormatException {
-        return Integer.valueOf(request.getParameter(Parameters.OPERATION_UNBLOCK));
     }
 
     public static List<Account> getAccountsList(HttpServletRequest request) {
@@ -68,7 +70,18 @@ public class RequestParameterParser {
 
     public static CommandType getCommandType(HttpServletRequest request){
         String commandName = request.getParameter(Parameters.COMMAND);
-        CommandType commandType = CommandType.valueOf(commandName.toUpperCase());
+        CommandType commandType = CommandType.LOGIN;
+        if(commandName != null) {
+            commandType = CommandType.valueOf(commandName.toUpperCase());
+        }
         return commandType;
+    }
+
+    public static double getAmountFromFunds(HttpServletRequest request) throws NumberFormatException{
+        return Double.valueOf(request.getParameter(Parameters.OPERATION_ADD_FUNDS));
+    }
+
+    public static double getAmountFromPayment(HttpServletRequest request) throws NumberFormatException{
+        return Double.valueOf(request.getParameter(Parameters.OPERATION_PAYMENT));
     }
 }

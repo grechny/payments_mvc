@@ -27,14 +27,16 @@ import by.pvt.khudnitsky.payments.managers.MessageManager;
 public class RegistrationCommand extends AbstractCommand {
     private User user;
     private Account account;
+    private String accountIdString;
 
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
         try{
             user = RequestParameterParser.getUser(request);
-            account = RequestParameterParser.getAccount(request);
+            accountIdString = request.getParameter(Parameters.ACCOUNT_ID);
             if(areFieldsFullStocked()){
+                account = RequestParameterParser.getAccount(request);
                 if(UserServiceImpl.getInstance().checkIsNewUser(user)){
                     UserServiceImpl.getInstance().registrateUser(user, account);
                     page = ConfigurationManager.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
@@ -42,7 +44,7 @@ public class RegistrationCommand extends AbstractCommand {
                 }
                 else{
                     page = ConfigurationManager.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
-                    request.setAttribute(Parameters.ERROR_USER_EXSISTS, MessageManager.getInstance().getProperty(MessageConstants.USER_EXSISTS));
+                    request.setAttribute(Parameters.ERROR_USER_EXISTS, MessageManager.getInstance().getProperty(MessageConstants.USER_EXISTS));
                 }
             }
             else{
@@ -70,12 +72,13 @@ public class RegistrationCommand extends AbstractCommand {
 
     // TODO javascript???
     private boolean areFieldsFullStocked(){
+
         boolean isFullStocked = false;
         if(!user.getFirstName().isEmpty()
                 & !user.getLastName().isEmpty()
                 & !user.getLogin().isEmpty()
                 & !user.getPassword().isEmpty()
-                & user.getAccountId()!= 0){
+                & !accountIdString.isEmpty()){
             isFullStocked = true;
         }
         return isFullStocked;
