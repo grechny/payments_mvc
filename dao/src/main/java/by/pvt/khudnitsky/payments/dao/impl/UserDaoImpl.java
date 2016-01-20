@@ -18,6 +18,7 @@ import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 import by.pvt.khudnitsky.payments.utils.ClosingUtil;
 import by.pvt.khudnitsky.payments.utils.EntityBuilder;
+import by.pvt.khudnitsky.payments.utils.PaymentSystemLogger;
 import org.apache.log4j.Logger;
 
 /**
@@ -27,7 +28,6 @@ import org.apache.log4j.Logger;
  */
 public class UserDaoImpl extends AbstractDao<User> {
     private static UserDaoImpl instance;
-    static Logger logger = Logger.getLogger(UserDaoImpl.class.getName());
     static String message;
 
     private UserDaoImpl(){}
@@ -53,7 +53,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to add the user account ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -77,7 +77,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to return list of users ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -101,7 +101,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to return the user ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -124,7 +124,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to return the user ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -147,7 +147,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to check the user ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -171,7 +171,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to check the user ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -194,7 +194,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to get max user id ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -214,7 +214,7 @@ public class UserDaoImpl extends AbstractDao<User> {
         }
         catch (SQLException e){
             message = "Unable to delete the user ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{

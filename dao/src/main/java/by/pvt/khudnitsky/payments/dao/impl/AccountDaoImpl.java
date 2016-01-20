@@ -11,6 +11,7 @@ import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 import by.pvt.khudnitsky.payments.utils.ClosingUtil;
 import by.pvt.khudnitsky.payments.utils.EntityBuilder;
+import by.pvt.khudnitsky.payments.utils.PaymentSystemLogger;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -27,7 +28,6 @@ import java.util.List;
  */
 public class AccountDaoImpl extends AbstractDao<Account> {
     private static AccountDaoImpl instance;
-    static Logger logger = Logger.getLogger(AccountDaoImpl.class.getName());
     static String message;
 
     private AccountDaoImpl(){}
@@ -61,7 +61,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch (SQLException e){
             message = "Unable to add the account ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -88,7 +88,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch (SQLException e){
             message = "Unable to return list of accounts ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -119,7 +119,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to return the account ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -150,7 +150,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to check account status ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -178,7 +178,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to return list of blocked accounts ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -206,7 +206,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to return max id of accounts ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -232,7 +232,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to update amount ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -257,7 +257,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to update account status ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -280,7 +280,7 @@ public class AccountDaoImpl extends AbstractDao<Account> {
         }
         catch(SQLException e){
             message = "Unable to delete the account ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{

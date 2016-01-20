@@ -8,10 +8,8 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import by.pvt.khudnitsky.payments.exceptions.DaoException;
+import by.pvt.khudnitsky.payments.utils.PaymentSystemLogger;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.log4j.Logger;
-
-//import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 
 /**
  * @author khudnitsky
@@ -20,7 +18,6 @@ import org.apache.log4j.Logger;
  */
 
 public class PoolManager {
-    static Logger logger = Logger.getLogger(PoolManager.class.getName());
     private static PoolManager instance;
     private BasicDataSource dataSource;
 
@@ -52,12 +49,10 @@ public class PoolManager {
             if (connectionHolder.get() == null) {
                 Connection connection = connect();
                 connectionHolder.set(connection);
-                logger.debug(Thread.currentThread().getName() + " set connection");
             }
         }
         catch(SQLException e){
             String message = "Unable to get connection";
-            logger.debug(message, e);
             throw new DaoException(message, e);
         }
         return connectionHolder.get();
@@ -70,7 +65,7 @@ public class PoolManager {
                 connectionHolder.remove();
             }
             catch(SQLException e){
-                logger.debug("Connection is already null " + e);
+                PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
             }
         }
     }

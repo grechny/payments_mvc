@@ -6,6 +6,7 @@ import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.exceptions.ServiceException;
 import by.pvt.khudnitsky.payments.services.AbstractService;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
+import by.pvt.khudnitsky.payments.utils.PaymentSystemLogger;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -17,7 +18,6 @@ import java.util.List;
  */
 public class OperationServiceImpl extends AbstractService<Operation> {
     private static OperationServiceImpl instance;
-    static Logger logger = Logger.getLogger(OperationServiceImpl.class.getName());
 
     private OperationServiceImpl(){}
 
@@ -41,11 +41,11 @@ public class OperationServiceImpl extends AbstractService<Operation> {
             connection.setAutoCommit(false);
             OperationDaoImpl.getInstance().add(entity);
             connection.commit();
-            logger.info("Transaction succeeded");
+            PaymentSystemLogger.getInstance().logError(getClass(), "Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
-            logger.info("Transaction failed");
+            PaymentSystemLogger.getInstance().logError(getClass(), "Transaction failed");
             throw new ServiceException(e.getMessage());
         }
     }
@@ -64,11 +64,11 @@ public class OperationServiceImpl extends AbstractService<Operation> {
             connection.setAutoCommit(false);
             operations = OperationDaoImpl.getInstance().getAll();
             connection.commit();
-            logger.info("Transaction succeeded");
+            PaymentSystemLogger.getInstance().logError(getClass(), "Transaction succeeded");
         }
         catch (SQLException | DaoException e) {
             connection.rollback();
-            logger.info("Transaction failed");
+            PaymentSystemLogger.getInstance().logError(getClass(), "Transaction failed");
             throw new ServiceException(e.getMessage());
         }
         return operations;

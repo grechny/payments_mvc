@@ -16,7 +16,6 @@ import by.pvt.khudnitsky.payments.exceptions.ServiceException;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.AccountServiceImpl;
 import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
-import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 
 /**
@@ -41,7 +40,6 @@ public class BalanceCommand extends AbstractCommand {
                 page = ConfigurationManager.getInstance().getProperty(PagePath.CLIENT_BALANCE_PAGE_PATH);
             }
             catch (ServiceException | SQLException e) {
-                PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
                 page = ConfigurationManager.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
             }

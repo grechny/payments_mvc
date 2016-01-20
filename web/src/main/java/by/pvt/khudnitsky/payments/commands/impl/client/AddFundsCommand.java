@@ -17,7 +17,6 @@ import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.AccountServiceImpl;
 import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
-import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 
 /**
  * @author khudnitsky
@@ -51,11 +50,9 @@ public class AddFundsCommand extends AbstractCommand {
                 }
             }
             catch (ServiceException | SQLException e) {
-                PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
                 page = ConfigurationManager.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
             } catch (NumberFormatException e) {
-                PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
                 request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_NUMBER_FORMAT));
                 page = ConfigurationManager.getInstance().getProperty(PagePath.CLIENT_ADDFUNDS_PAGE_PATH);
 

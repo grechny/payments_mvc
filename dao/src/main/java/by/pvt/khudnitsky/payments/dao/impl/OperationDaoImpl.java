@@ -18,6 +18,7 @@ import by.pvt.khudnitsky.payments.exceptions.DaoException;
 import by.pvt.khudnitsky.payments.managers.PoolManager;
 import by.pvt.khudnitsky.payments.utils.ClosingUtil;
 import by.pvt.khudnitsky.payments.utils.EntityBuilder;
+import by.pvt.khudnitsky.payments.utils.PaymentSystemLogger;
 import org.apache.log4j.Logger;
 
 /**
@@ -27,7 +28,6 @@ import org.apache.log4j.Logger;
  */
 public class OperationDaoImpl extends AbstractDao<Operation> {
     private static OperationDaoImpl instance;
-    static Logger logger = Logger.getLogger(OperationDaoImpl.class.getName());
     static String message;
 
     private OperationDaoImpl(){}
@@ -52,7 +52,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
         }
         catch (SQLException e){
             message = "Unable to add the operation ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -74,7 +74,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
         }
         catch (SQLException e){
             message = "Unable to return list of operations ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -98,7 +98,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
         }
         catch (SQLException e){
             message = "Unable to return the operation ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -121,7 +121,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
         }
         catch(SQLException e){
             message = "Unable to return max id of accounts ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{
@@ -141,7 +141,7 @@ public class OperationDaoImpl extends AbstractDao<Operation> {
         }
         catch (SQLException e){
             message = "Unable to delete the operation ";
-            logger.debug(message);
+            PaymentSystemLogger.getInstance().logError(getClass(), message);
             throw new DaoException(message, e);
         }
         finally{

@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
  */
 public class CommandFactory {
     private static CommandFactory instance;
-    static Logger logger = Logger.getLogger(CommandFactory.class.getName());
 
     private CommandFactory(){}
 
@@ -36,7 +35,6 @@ public class CommandFactory {
             current = type.getCurrentCommand();
         }
         catch(IllegalArgumentException e){
-            logger.debug("Incorrect command attempt", e);
             current = new LoginUserCommand();
         }
         return current;

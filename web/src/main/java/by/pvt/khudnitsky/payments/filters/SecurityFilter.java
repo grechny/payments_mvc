@@ -3,16 +3,10 @@
  */
 package by.pvt.khudnitsky.payments.filters;
 
-import by.pvt.khudnitsky.payments.commands.factory.CommandFactory;
 import by.pvt.khudnitsky.payments.commands.factory.CommandType;
-import by.pvt.khudnitsky.payments.commands.impl.user.LoginUserCommand;
-import by.pvt.khudnitsky.payments.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.constants.PagePath;
-import by.pvt.khudnitsky.payments.constants.Parameters;
 import by.pvt.khudnitsky.payments.constants.UserType;
-import by.pvt.khudnitsky.payments.commands.ICommand;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
-import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
 
 import java.io.IOException;

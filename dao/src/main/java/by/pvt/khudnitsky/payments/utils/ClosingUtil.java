@@ -10,7 +10,6 @@ import java.sql.ResultSet;
  * Copyright (c) 2016, Khudnitsky. All rights reserved.
  */
 public class ClosingUtil {
-    static Logger logger = Logger.getLogger(ClosingUtil.class.getName());
 
     private ClosingUtil(){}
 
@@ -20,7 +19,7 @@ public class ClosingUtil {
                 statement.close();
             }
             catch(SQLException e){
-                logger.debug("Statement is already null " + e);
+                PaymentSystemLogger.getInstance().logError(ClosingUtil.class, e.getMessage());
             }
         }
     }
@@ -31,7 +30,7 @@ public class ClosingUtil {
                 resultSet.close();
             }
             catch(SQLException e){
-                logger.debug("ResultSet is already null " + e);
+                PaymentSystemLogger.getInstance().logError(ClosingUtil.class, e.getMessage());
             }
         }
     }

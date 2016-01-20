@@ -17,7 +17,6 @@ import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
 import by.pvt.khudnitsky.payments.services.impl.AccountServiceImpl;
 import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
-import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 
 /**
  * @author khudnitsky
@@ -38,7 +37,6 @@ public class GoToUnblockCommand extends AbstractCommand {
                 page = ConfigurationManager.getInstance().getProperty(PagePath.ADMIN_UNBLOCK_PAGE);
             }
             catch (ServiceException | SQLException e) {
-                PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
                 page = ConfigurationManager.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
             }

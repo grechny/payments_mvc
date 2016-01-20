@@ -16,7 +16,6 @@ import by.pvt.khudnitsky.payments.commands.AbstractCommand;
 import by.pvt.khudnitsky.payments.constants.MessageConstants;
 import by.pvt.khudnitsky.payments.constants.Parameters;
 import by.pvt.khudnitsky.payments.utils.RequestParameterParser;
-import by.pvt.khudnitsky.payments.utils.logger.PaymentSystemLogger;
 import by.pvt.khudnitsky.payments.managers.ConfigurationManager;
 import by.pvt.khudnitsky.payments.managers.MessageManager;
 
@@ -54,18 +53,15 @@ public class RegistrationCommand extends AbstractCommand {
             }
         }
         catch (ServiceException | SQLException e) {
-            PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
             page = ConfigurationManager.getInstance().getProperty(PagePath.ERROR_PAGE_PATH);
             request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
         }
         catch (NumberFormatException e) {
-            PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
             request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_NUMBER_FORMAT));
             page = ConfigurationManager.getInstance().getProperty(PagePath.REGISTRATION_PAGE_PATH);
         }
         // TODO исправить
         catch(NullPointerException e){
-            PaymentSystemLogger.getInstance().logError(getClass(), e.getMessage());
             page = ConfigurationManager.getInstance().getProperty(PagePath.INDEX_PAGE_PATH);
         }
         return page;
